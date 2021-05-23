@@ -1,0 +1,9 @@
+code
+core
+core18
+gnome-3-34-1804
+gtk-common-themes
+keepassxc
+snap-store
+snapd
+spotify
