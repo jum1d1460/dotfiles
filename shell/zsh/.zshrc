@@ -1,3 +1,4 @@
+#!/usr/bin/env zsh
 # Uncomment for debuf with `zprof`
 # zmodload zsh/zprof
 
@@ -24,3 +25,13 @@ prompt ${DOTLY_THEME:-codely}
 source "$DOTLY_PATH/shell/zsh/bindings/dot.zsh"
 source "$DOTLY_PATH/shell/zsh/bindings/reverse_search.zsh"
 source "$DOTFILES_PATH/shell/zsh/key-bindings.zsh"
+
+
+alias dkall="docker stop $(docker ps -q)"
+alias dce="docker-compose exec "
+alias risso_drush="docker compose -f ~/Code/risso/docker/tck/docker-compose-osx.yaml exec php drush -l"
+alias pstorm="/usr/local/bin/pstorm"
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
