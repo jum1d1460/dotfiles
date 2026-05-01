@@ -1,105 +1,105 @@
-# 🐚 Zsh — Shell Configuration
+# 🐚 Zsh — Configuración del Shell
 
-Your shell is **Zsh**, configured for maximum productivity with modern plugins, smart history, and a curated set of aliases.
+Tu shell es **Zsh**, configurado para máxima productividad con plugins modernos, historial inteligente y un conjunto cuidado de alias.
 
-**Config file:** `~/.zshrc` (symlinked from `~/.dotfiles/zsh/.zshrc`)
+**Archivo de configuración:** `~/.zshrc` (enlace simbólico de `~/.dotfiles/zsh/.zshrc`)
 
 ---
 
 ## Plugins
 
-| Plugin | Effect |
+| Plugin | Efecto |
 |--------|--------|
-| `zsh-autosuggestions` | Grey ghost text shows history suggestions as you type. Press `→` or `End` to accept. |
-| `zsh-syntax-highlighting` | Commands turn green when valid, red when not found, while you type. |
+| `zsh-autosuggestions` | Texto fantasma gris que muestra sugerencias del historial mientras escribes. Pulsa `→` o `Fin` para aceptar. |
+| `zsh-syntax-highlighting` | Los comandos se muestran en verde cuando son válidos y en rojo cuando no se encuentran, mientras escribes. |
 
-Both plugins are cloned to `~/.zsh/plugins/` during installation.
+Ambos plugins se clonan en `~/.zsh/plugins/` durante la instalación.
 
 ---
 
-## Shell Options
+## Opciones del Shell
 
-| Option | Effect |
+| Opción | Efecto |
 |--------|--------|
-| `AUTO_CD` | Type a directory name to `cd` into it (no `cd` needed) |
-| `AUTO_PUSHD` | Every `cd` pushes the old dir onto a stack (`popd` to go back) |
-| `CORRECT` | Suggests corrections for mistyped commands |
-| `INTERACTIVE_COMMENTS` | You can type `# comments` in the interactive shell |
+| `AUTO_CD` | Escribe el nombre de un directorio para entrar en él (sin necesidad de `cd`) |
+| `AUTO_PUSHD` | Cada `cd` guarda el directorio anterior en una pila (`popd` para volver) |
+| `CORRECT` | Sugiere correcciones para comandos mal escritos |
+| `INTERACTIVE_COMMENTS` | Puedes escribir `# comentarios` en el shell interactivo |
 
 ---
 
-## History
+## Historial
 
-| Setting | Value |
-|---------|-------|
-| History size | 1,000,000 entries |
-| Saved to disk | `~/.zsh_history` |
-| Shared across sessions | ✅ (all open terminals share history) |
-| Timestamps stored | ✅ |
-| Duplicates removed | ✅ |
-| Written immediately | ✅ (not just at shell exit) |
-
----
-
-## Tab Completion
-
-- Press `Tab` to complete commands, paths, and arguments
-- Press `Tab Tab` to open an interactive menu
-- Use arrow keys to navigate the menu
-- Completion is **case-insensitive** by default
-- Completion menu inherits your `LS_COLORS` colours
+| Ajuste | Valor |
+|--------|-------|
+| Tamaño del historial | 1.000.000 entradas |
+| Guardado en disco | `~/.zsh_history` |
+| Compartido entre sesiones | ✅ (todos los terminales abiertos comparten el historial) |
+| Marcas de tiempo guardadas | ✅ |
+| Duplicados eliminados | ✅ |
+| Escrito inmediatamente | ✅ (no solo al cerrar el shell) |
 
 ---
 
-## Keyboard Shortcuts
+## Autocompletado con Tab
 
-### fzf Integration
-
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+R` | **Fuzzy history search** — find any past command |
-| `Ctrl+T` | **Fuzzy file picker** — select a file, paste its path |
-| `Alt+C` | **Fuzzy directory picker** — `cd` into selected dir |
-
-### Standard Zsh
-
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+A` | Move cursor to beginning of line |
-| `Ctrl+E` | Move cursor to end of line |
-| `Ctrl+W` | Delete word before cursor |
-| `Ctrl+U` | Delete entire line |
-| `Ctrl+K` | Delete from cursor to end of line |
-| `Ctrl+L` | Clear screen |
-| `Ctrl+C` | Cancel current command |
-| `Ctrl+Z` | Suspend current process (resume with `fg`) |
-| `Alt+F` | Move forward one word |
-| `Alt+B` | Move backward one word |
+- Pulsa `Tab` para completar comandos, rutas y argumentos
+- Pulsa `Tab Tab` para abrir un menú interactivo
+- Usa las flechas para navegar por el menú
+- El completado es **insensible a mayúsculas** por defecto
+- El menú de completado hereda los colores de `LS_COLORS`
 
 ---
 
-## Aliases — File Operations
+## Atajos de Teclado
 
-| Alias | Expands to | Notes |
+### Integración con fzf
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+R` | **Búsqueda difusa en el historial** — encontrar cualquier comando pasado |
+| `Ctrl+T` | **Selector difuso de archivos** — seleccionar un archivo y pegar su ruta |
+| `Alt+C` | **Selector difuso de directorios** — `cd` al directorio seleccionado |
+
+### Zsh Estándar
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` | Mover el cursor al principio de la línea |
+| `Ctrl+E` | Mover el cursor al final de la línea |
+| `Ctrl+W` | Eliminar la palabra anterior al cursor |
+| `Ctrl+U` | Eliminar toda la línea |
+| `Ctrl+K` | Eliminar desde el cursor hasta el final de la línea |
+| `Ctrl+L` | Limpiar la pantalla |
+| `Ctrl+C` | Cancelar el comando actual |
+| `Ctrl+Z` | Suspender el proceso actual (reanuda con `fg`) |
+| `Alt+F` | Avanzar una palabra |
+| `Alt+B` | Retroceder una palabra |
+
+---
+
+## Alias — Operaciones con Archivos
+
+| Alias | Expande a | Notas |
 |-------|-----------|-------|
-| `cat` | `bat --paging=never` | Syntax-highlighted file view |
-| `less` | `bat --paging=always` | Scrollable syntax-highlighted view |
-| `ls` | `eza --icons --group-directories-first` | Icons, dirs first |
-| `ll` | `eza --icons --long --group-directories-first --git` | Long format with Git |
-| `la` | `eza --icons --long --all --group-directories-first --git` | Include hidden |
-| `lt` | `eza --icons --tree --level=2 --group-directories-first` | Tree view |
-| `lta` | `eza --icons --tree --level=2 --all --group-directories-first` | Tree + hidden |
-| `mkdir` | `mkdir -p` | Create parent dirs automatically |
-| `cp` | `cp -i` | Prompt before overwriting |
-| `mv` | `mv -i` | Prompt before overwriting |
-| `rm` | `rm -i` | Prompt before deleting |
-| `grep` | `grep --color=auto` | Always colorize matches |
+| `cat` | `bat --paging=never` | Vista de archivos con resaltado de sintaxis |
+| `less` | `bat --paging=always` | Vista desplazable con resaltado de sintaxis |
+| `ls` | `eza --icons --group-directories-first` | Iconos, directorios primero |
+| `ll` | `eza --icons --long --group-directories-first --git` | Formato largo con Git |
+| `la` | `eza --icons --long --all --group-directories-first --git` | Incluye ocultos |
+| `lt` | `eza --icons --tree --level=2 --group-directories-first` | Vista en árbol |
+| `lta` | `eza --icons --tree --level=2 --all --group-directories-first` | Árbol + ocultos |
+| `mkdir` | `mkdir -p` | Crea directorios padre automáticamente |
+| `cp` | `cp -i` | Pregunta antes de sobreescribir |
+| `mv` | `mv -i` | Pregunta antes de sobreescribir |
+| `rm` | `rm -i` | Pregunta antes de eliminar |
+| `grep` | `grep --color=auto` | Siempre coloriza las coincidencias |
 
 ---
 
-## Aliases — Navigation
+## Alias — Navegación
 
-| Alias | Expands to |
+| Alias | Expande a |
 |-------|-----------|
 | `..` | `cd ..` |
 | `...` | `cd ../..` |
@@ -107,23 +107,23 @@ Both plugins are cloned to `~/.zsh/plugins/` during installation.
 
 ---
 
-## Aliases — System
+## Alias — Sistema
 
-| Alias | Expands to | Notes |
+| Alias | Expande a | Notas |
 |-------|-----------|-------|
-| `top` | `btop` | Graphical process monitor |
-| `df` | `df -h` | Human-readable disk usage |
-| `du` | `du -h` | Human-readable dir sizes |
-| `free` | `free -h` | Human-readable memory |
-| `ps` | `ps auxf` | Full process tree |
-| `reload` | `source ~/.zshrc` | Reload Zsh config |
-| `help` | `tldr` | Quick command examples |
+| `top` | `btop` | Monitor de procesos gráfico |
+| `df` | `df -h` | Uso de disco legible por humanos |
+| `du` | `du -h` | Tamaño de directorios legible por humanos |
+| `free` | `free -h` | Memoria legible por humanos |
+| `ps` | `ps auxf` | Árbol completo de procesos |
+| `reload` | `source ~/.zshrc` | Recargar la configuración de Zsh |
+| `help` | `tldr` | Ejemplos rápidos de comandos |
 
 ---
 
-## Aliases — Git
+## Alias — Git
 
-| Alias | Expands to |
+| Alias | Expande a |
 |-------|-----------|
 | `gs` | `git status` |
 | `ga` | `git add` |
@@ -136,55 +136,55 @@ Both plugins are cloned to `~/.zsh/plugins/` during installation.
 | `gb` | `git branch` |
 | `gco` | `git checkout` |
 | `gsw` | `git switch` |
-| `gl` | `git log` (graphical, coloured, all branches) |
-| `gd` | `git diff` (via delta) |
-| `gds` | `git diff --staged` (via delta) |
+| `gl` | `git log` (gráfico, con colores, todas las ramas) |
+| `gd` | `git diff` (vía delta) |
+| `gds` | `git diff --staged` (vía delta) |
 | `grb` | `git rebase` |
 | `gst` | `git stash` |
 | `gstp` | `git stash pop` |
-| `lg` | `lazygit` (TUI git client) |
+| `lg` | `lazygit` (cliente Git en TUI) |
 
 ---
 
-## Environment Variables
+## Variables de Entorno
 
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| `EDITOR` | `vim` | Default editor (used by git, cron, etc.) |
-| `VISUAL` | same as `EDITOR` | GUI editor fallback |
-| `BAT_STYLE` | `numbers,changes,header` | bat decoration style |
-| `BAT_THEME` | `Catppuccin Macchiato` (default) | bat colour theme |
-| `GIT_PAGER` | `delta` | git diffs routed through delta |
-| `MANPAGER` | `bat -l man` | man pages rendered by bat |
-| `FZF_DEFAULT_COMMAND` | `fd --type f ...` | fzf uses fd for file search |
-| `PATH` | `~/.local/bin`, `~/.nix-profile/bin`, ... | Tool search paths |
+| Variable | Valor | Propósito |
+|----------|-------|-----------|
+| `EDITOR` | `vim` | Editor por defecto (usado por git, cron, etc.) |
+| `VISUAL` | igual que `EDITOR` | Editor gráfico alternativo |
+| `BAT_STYLE` | `numbers,changes,header` | Estilo de decoración de bat |
+| `BAT_THEME` | `Catppuccin Macchiato` (por defecto) | Tema de colores de bat |
+| `GIT_PAGER` | `delta` | Los diffs de git pasan por delta |
+| `MANPAGER` | `bat -l man` | Las páginas de manual se renderizan con bat |
+| `FZF_DEFAULT_COMMAND` | `fd --type f ...` | fzf usa fd para buscar archivos |
+| `PATH` | `~/.local/bin`, `~/.nix-profile/bin`, ... | Rutas de búsqueda de herramientas |
 
 ---
 
-## Modifying the Configuration
+## Modificar la Configuración
 
 ```bash
-# Edit the config in the dotfiles repo
+# Editar la configuración en el repositorio de dotfiles
 vim ~/.dotfiles/zsh/.zshrc
 
-# Apply changes to current session
-reload   # alias for: source ~/.zshrc
+# Aplicar los cambios a la sesión actual
+reload   # alias de: source ~/.zshrc
 
-# Or open a new terminal tab
+# O abre una nueva pestaña de terminal
 ```
 
-> **Note:** Always edit `~/.dotfiles/zsh/.zshrc`, not `~/.zshrc` directly.  
-> `~/.zshrc` is a symlink managed by Stow — editing it directly works too (it's the same file), but keeping edits in `~/.dotfiles` makes them version-controlled.
+> **Nota:** Edita siempre `~/.dotfiles/zsh/.zshrc`, no `~/.zshrc` directamente.  
+> `~/.zshrc` es un enlace simbólico gestionado por Stow — editarlo directamente también funciona (es el mismo archivo), pero mantener los cambios en `~/.dotfiles` los deja bajo control de versiones.
 
 ---
 
-## Checking Plugin Status
+## Comprobar el Estado de los Plugins
 
 ```bash
-# Verify plugins are loaded
-echo $ZSH_AUTOSUGGESTIONS_VERSION   # should print a version
-echo $ZSH_HIGHLIGHT_VERSION         # should print a version
+# Verificar que los plugins están cargados
+echo $ZSH_AUTOSUGGESTIONS_VERSION   # debe mostrar una versión
+echo $ZSH_HIGHLIGHT_VERSION         # debe mostrar una versión
 
-# Or check the plugin files exist
+# O comprobar que los archivos de plugin existen
 ls ~/.zsh/plugins/
 ```

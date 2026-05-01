@@ -1,132 +1,132 @@
 # 📜 Scripts
 
-Custom scripts are located in `~/.dotfiles/scripts/` and symlinked to `~/.local/bin/` during installation, making them available as plain commands from anywhere.
+Los scripts personalizados se encuentran en `~/.dotfiles/scripts/` y se enlazan simbólicamente a `~/.local/bin/` durante la instalación, lo que los hace disponibles como comandos normales desde cualquier lugar.
 
 ---
 
-## `up` — Full System Updater
+## `up` — Actualizador Completo del Sistema
 
-**Location:** `~/.dotfiles/bin/.local/bin/up`  
-**Symlinked to:** `~/.local/bin/up`
+**Ubicación:** `~/.dotfiles/bin/.local/bin/up`  
+**Enlace simbólico en:** `~/.local/bin/up`
 
-Runs a complete system update in one command:
+Ejecuta una actualización completa del sistema con un solo comando:
 
 ```bash
 up
 ```
 
-### What it updates
+### Qué actualiza
 
-| Step | Command | What it does |
-|------|---------|-------------|
-| 1 | `apt-get update && upgrade` | Ubuntu/Debian system packages |
-| 2 | `apt-get autoremove` | Removes unused packages |
-| 3 | `flatpak update` | All Flatpak applications (including WezTerm) |
-| 4 | `nix profile upgrade '.*'` | All Nix-installed CLI tools |
-| 5 | `nix store gc` | Garbage-collects unused Nix store paths (frees disk space) |
-| 6 | `git pull` in each plugin dir | Updates Zsh plugins (autosuggestions, syntax-highlighting) |
+| Paso | Comando | Qué hace |
+|------|---------|----------|
+| 1 | `apt-get update && upgrade` | Paquetes del sistema Ubuntu/Debian |
+| 2 | `apt-get autoremove` | Elimina paquetes no utilizados |
+| 3 | `flatpak update` | Todas las aplicaciones Flatpak (incluido WezTerm) |
+| 4 | `nix profile upgrade '.*'` | Todas las herramientas CLI instaladas con Nix |
+| 5 | `nix store gc` | Recoge basura en el almacén Nix (libera espacio en disco) |
+| 6 | `git pull` en cada directorio de plugin | Actualiza los plugins de Zsh (autosuggestions, syntax-highlighting) |
 
-### Partial updates
+### Actualizaciones parciales
 
 ```bash
-# Update only Nix packages
+# Actualizar solo los paquetes Nix
 nix profile upgrade '.*'
 
-# Update a specific Nix package
+# Actualizar un paquete Nix específico
 nix profile upgrade nixpkgs#bat
 
-# Update only Flatpak apps
+# Actualizar solo las aplicaciones Flatpak
 flatpak update
 
-# Clean Nix store only
+# Limpiar solo el almacén Nix
 nix store gc
 
-# Update only Zsh plugins
+# Actualizar solo los plugins de Zsh
 git -C ~/.zsh/plugins/zsh-autosuggestions pull --ff-only
 git -C ~/.zsh/plugins/zsh-syntax-highlighting pull --ff-only
 ```
 
 ---
 
-## `theme-switcher` — Theme Manager
+## `theme-switcher` — Gestor de Temas
 
-**Location:** `~/.dotfiles/scripts/theme-switcher`  
-**Symlinked to:** `~/.local/bin/theme-switcher`
+**Ubicación:** `~/.dotfiles/scripts/theme-switcher`  
+**Enlace simbólico en:** `~/.local/bin/theme-switcher`
 
-Switches the colour scheme for WezTerm, bat, and Starship simultaneously.
+Cambia el esquema de colores de WezTerm, bat y Starship simultáneamente.
 
 ```bash
-theme-switcher catppuccin      # warm pastels (default)
-theme-switcher tokyo-night     # dark blues and purples
-theme-switcher dracula         # high-contrast pink/purple
+theme-switcher catppuccin      # pasteles cálidos (por defecto)
+theme-switcher tokyo-night     # azules y morados oscuros
+theme-switcher dracula         # alto contraste rosa/morado
 
-# No argument — shows usage and available themes:
+# Sin argumento — muestra el uso y los temas disponibles:
 theme-switcher
 ```
 
-### What gets changed
+### Qué se modifica
 
-| Component | File modified |
-|-----------|--------------|
-| WezTerm | `~/.config/current-theme` (read on startup / live reload via SIGUSR1) |
-| bat | `--theme=` line in `~/.config/bat/config` |
-| Starship | `palette =` line in `~/.config/starship.toml` |
-| GNOME wallpaper | via `gsettings` (only if matching image exists in `~/.local/share/wallpapers/`) |
+| Componente | Archivo modificado |
+|------------|--------------------|
+| WezTerm | `~/.config/current-theme` (leído al iniciar / recarga en directo vía SIGUSR1) |
+| bat | Línea `--theme=` en `~/.config/bat/config` |
+| Starship | Línea `palette =` en `~/.config/starship.toml` |
+| Fondo GNOME | vía `gsettings` (solo si existe una imagen en `~/.local/share/wallpapers/`) |
 
-See `docs/themes.md` for full details on adding new themes.
-
----
-
-## `docs` — Documentation Browser
-
-**Location:** `~/.dotfiles/scripts/docs`  
-**Symlinked to:** `~/.local/bin/docs`  
-**Alias:** `docs` (also set in `~/.zshrc`)
-
-Opens the interactive documentation browser in the terminal using `glow`.
-
-```bash
-docs                     # open interactive documentation browser
-docs tools               # open the tools reference directly
-docs wezterm             # open WezTerm docs directly
-docs zsh                 # open Zsh docs directly
-docs themes              # open theme system docs
-docs scripts             # open this file
-docs stow                # open GNU Stow guide
-docs troubleshooting     # open troubleshooting guide
-```
-
-### Inside the documentation browser
-
-| Key | Action |
-|-----|--------|
-| ↑ ↓ | Navigate files |
-| `Enter` | Open selected document |
-| `Esc` | Go back to file list |
-| `/` | Search within document |
-| `q` | Quit |
+Consulta `docs/themes.md` para más detalles sobre cómo añadir nuevos temas.
 
 ---
 
-## Adding a New Script
+## `docs` — Navegador de Documentación
 
-1. Create your script in `~/.dotfiles/scripts/my-script`
-2. Make it executable: `chmod +x ~/.dotfiles/scripts/my-script`
-3. The install.sh already handles symlinking — re-run it or create the symlink manually:
+**Ubicación:** `~/.dotfiles/scripts/docs`  
+**Enlace simbólico en:** `~/.local/bin/docs`  
+**Alias:** `docs` (también definido en `~/.zshrc`)
+
+Abre el navegador de documentación interactivo en la terminal usando `glow`.
 
 ```bash
-ln -sf ~/.dotfiles/scripts/my-script ~/.local/bin/my-script
+docs                     # abrir el navegador de documentación interactivo
+docs tools               # abrir directamente la referencia de herramientas
+docs wezterm             # abrir directamente la documentación de WezTerm
+docs zsh                 # abrir directamente la documentación de Zsh
+docs themes              # abrir la documentación del sistema de temas
+docs scripts             # abrir este archivo
+docs stow                # abrir la guía de GNU Stow
+docs troubleshooting     # abrir la guía de solución de problemas
 ```
 
-Your script is now available as `my-script` from anywhere.
+### Dentro del navegador de documentación
 
-### Script template
+| Tecla | Acción |
+|-------|--------|
+| ↑ ↓ | Navegar por archivos |
+| `Enter` | Abrir documento seleccionado |
+| `Esc` | Volver a la lista de archivos |
+| `/` | Buscar dentro del documento |
+| `q` | Salir |
+
+---
+
+## Añadir un Nuevo Script
+
+1. Crea tu script en `~/.dotfiles/scripts/mi-script`
+2. Hazlo ejecutable: `chmod +x ~/.dotfiles/scripts/mi-script`
+3. El install.sh ya gestiona los enlaces simbólicos — vuelve a ejecutarlo o crea el enlace manualmente:
+
+```bash
+ln -sf ~/.dotfiles/scripts/mi-script ~/.local/bin/mi-script
+```
+
+Tu script ya está disponible como `mi-script` desde cualquier lugar.
+
+### Plantilla de script
 
 ```bash
 #!/usr/bin/env bash
 # =============================================================================
-# my-script — Short description
-# Usage: my-script [options]
+# mi-script — Descripción breve
+# Uso: mi-script [opciones]
 # =============================================================================
 set -euo pipefail
 
@@ -137,8 +137,8 @@ step()    { echo -e "\n${BOLD}${CYAN}▶ $*${RESET}"; }
 success() { echo -e "${GREEN}✓${RESET} $*"; }
 error()   { echo -e "${RED}✗${RESET} $*" >&2; exit 1; }
 
-# Your code here
-step "Doing something"
-echo "Hello!"
-success "Done."
+# Tu código aquí
+step "Haciendo algo"
+echo "¡Hola!"
+success "Listo."
 ```

@@ -1,39 +1,39 @@
-# 📚 Dotfiles — Documentation Index
+# 📚 Dotfiles — Índice de Documentación
 
-Welcome to the interactive help system for your **Ubuntu 2026 Modern Terminal Infrastructure**.
+Bienvenido al sistema de ayuda interactivo para tu **Infraestructura de Terminal Moderna Ubuntu 2026**.
 
-Navigate with ↑ ↓ arrows, press **Enter** to open a doc, **Esc** to go back.
-
----
-
-## Available Guides
-
-| File | Contents |
-|------|----------|
-| `tools.md` | All CLI tools — what they do and how to use them |
-| `wezterm.md` | WezTerm terminal emulator — config and key bindings |
-| `zsh.md` | Zsh shell — config, aliases, plugins, keyboard shortcuts |
-| `themes.md` | Theme system — switching and creating themes |
-| `scripts.md` | Scripts: `up` (updater), `theme-switcher`, `docs` |
-| `stow.md` | GNU Stow — how dotfiles are deployed as symlinks |
-| `troubleshooting.md` | Common problems and their fixes |
+Navega con las flechas ↑ ↓, pulsa **Enter** para abrir una guía y **Esc** para volver.
 
 ---
 
-## Quick Reference
+## Guías Disponibles
+
+| Archivo | Contenido |
+|---------|-----------|
+| `tools.md` | Todas las herramientas CLI — qué hacen y cómo usarlas |
+| `wezterm.md` | Emulador de terminal WezTerm — configuración y atajos de teclado |
+| `zsh.md` | Shell Zsh — configuración, alias, plugins y atajos de teclado |
+| `themes.md` | Sistema de temas — cómo cambiar y crear temas |
+| `scripts.md` | Scripts: `up` (actualizador), `theme-switcher`, `docs` |
+| `stow.md` | GNU Stow — cómo se despliegan los dotfiles como enlaces simbólicos |
+| `troubleshooting.md` | Problemas habituales y sus soluciones |
+
+---
+
+## Referencia Rápida
 
 ```bash
-docs                  # open this documentation browser
-docs tools            # open a specific doc directly
-theme-switcher catppuccin   # switch to Catppuccin theme
-up                    # full system update (apt + Flatpak + Nix)
-lg                    # open lazygit (TUI git client)
-tldr <command>        # practical examples for any command
+docs                        # abrir este navegador de documentación
+docs tools                  # abrir una guía específica directamente
+theme-switcher catppuccin   # cambiar al tema Catppuccin
+up                          # actualización completa del sistema (apt + Flatpak + Nix)
+lg                          # abrir lazygit (cliente Git en TUI)
+tldr <comando>              # ejemplos prácticos de cualquier comando
 ```
 
 ---
 
-## Installation Quick Start
+## Instalación Rápida
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/.dotfiles
@@ -45,4 +45,4 @@ exec zsh
 
 ---
 
-*Built with ❤️ for a macOS-style Ubuntu workflow. Powered by Nix + Stow + Zsh.*
+*Hecho con ❤️ para un flujo de trabajo Ubuntu al estilo macOS. Desarrollado con Nix + Stow + Zsh.*
