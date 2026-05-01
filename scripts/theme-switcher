@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# =============================================================================
+# theme-switcher — Switch terminal theme across WezTerm, Starship, and Bat
+# Usage: theme-switcher <catppuccin|tokyo-night|dracula>
+# =============================================================================
+set -euo pipefail
+
+# ─── Colours for output ───────────────────────────────────────────────────────
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
+
+info()    { echo -e "${CYAN}[theme-switcher]${RESET} $*"; }
+success() { echo -e "${GREEN}[theme-switcher]${RESET} $*"; }
+warn()    { echo -e "${YELLOW}[theme-switcher]${RESET} $*"; }
+error()   { echo -e "${RED}[theme-switcher]${RESET} $*" >&2; exit 1; }
+
+# ─── Theme definitions ────────────────────────────────────────────────────────
+declare -A WEZTERM_THEMES=(
+  ["catppuccin"]="Catppuccin Macchiato"
+  ["tokyo-night"]="Tokyo Night"
+  ["dracula"]="Dracula (Official)"
+)
+
+declare -A BAT_THEMES=(
+  ["catppuccin"]="Catppuccin Macchiato"
+  ["tokyo-night"]="TwoDark"   # closest available default; replace with custom if installed
+  ["dracula"]="Dracula"
+)
+
+declare -A STARSHIP_PALETTES=(
+  ["catppuccin"]="catppuccin_macchiato"
+  ["tokyo-night"]="tokyo_night"
+  ["dracula"]="dracula"
+)
+
+# ─── Optional: GNOME wallpapers ──────────────────────────────────────────────
+# Place matching wallpapers in ~/.local/share/wallpapers/<theme>.jpg
+declare -A GNOME_WALLPAPERS=(
+  ["catppuccin"]="${HOME}/.local/share/wallpapers/catppuccin.jpg"
+  ["tokyo-night"]="${HOME}/.local/share/wallpapers/tokyo-night.jpg"
+  ["dracula"]="${HOME}/.local/share/wallpapers/dracula.jpg"
+)
+
+# ─── Validate argument ────────────────────────────────────────────────────────
+THEME="${1:-}"
+if [[ -z "${THEME}" ]]; then
+  echo -e "${BOLD}Usage:${RESET} theme-switcher <catppuccin|tokyo-night|dracula>"
+  echo ""
+  echo "Available themes:"
+  for t in "${!WEZTERM_THEMES[@]}"; do
+    echo "  • ${t}"
+  done
+  exit 1
+fi
+
+[[ -v WEZTERM_THEMES["${THEME}"] ]] || \
+  error "Unknown theme '${THEME}'. Valid options: catppuccin, tokyo-night, dracula"
+
+# ─── 1. Write active theme marker ─────────────────────────────────────────────
+CONFIG_DIR="${HOME}/.config"
+mkdir -p "${CONFIG_DIR}"
+echo "${THEME}" > "${CONFIG_DIR}/current-theme"
+info "Active theme marker written: ${CONFIG_DIR}/current-theme → ${THEME}"
+
+# ─── 2. Reload WezTerm ────────────────────────────────────────────────────────
+# WezTerm reads ~/.config/current-theme on startup via .wezterm.lua.
+# Send SIGUSR1 to reload the configuration live if WezTerm is running.
+if pgrep -x wezterm-gui &>/dev/null; then
+  pkill -SIGUSR1 -x wezterm-gui 2>/dev/null || true
+  success "WezTerm config reloaded → ${WEZTERM_THEMES[${THEME}]}"
+else
+  info "WezTerm not running; theme will apply on next launch."
+fi
+
+# ─── 3. Update bat theme ──────────────────────────────────────────────────────
+BAT_CONFIG_DIR="${HOME}/.config/bat"
+mkdir -p "${BAT_CONFIG_DIR}"
+BAT_CONFIG="${BAT_CONFIG_DIR}/config"
+
+# Remove existing --theme line and add the new one
+if [[ -f "${BAT_CONFIG}" ]]; then
+  # Portable sed: create temp file, then replace
+  grep -v '^--theme=' "${BAT_CONFIG}" > "${BAT_CONFIG}.tmp" || true
+  mv "${BAT_CONFIG}.tmp" "${BAT_CONFIG}"
+fi
+echo "--theme=\"${BAT_THEMES[${THEME}]}\"" >> "${BAT_CONFIG}"
+success "bat theme updated → ${BAT_THEMES[${THEME}]}"
+
+# Also export for the current shell session (useful when sourced)
+export BAT_THEME="${BAT_THEMES[${THEME}]}"
+
+# ─── 4. Update Starship palette ───────────────────────────────────────────────
+STARSHIP_CONFIG="${HOME}/.config/starship.toml"
+if [[ -f "${STARSHIP_CONFIG}" ]]; then
+  # Replace the `palette = "..."` line
+  sed -i "s/^palette = .*/palette = \"${STARSHIP_PALETTES[${THEME}]}\"/" \
+    "${STARSHIP_CONFIG}"
+  success "Starship palette updated → ${STARSHIP_PALETTES[${THEME}]}"
+else
+  warn "Starship config not found at ${STARSHIP_CONFIG} — skipping."
+fi
+
+# ─── 5. (Optional) GNOME wallpaper ───────────────────────────────────────────
+WALLPAPER="${GNOME_WALLPAPERS[${THEME}]}"
+if command -v gsettings &>/dev/null && [[ -f "${WALLPAPER}" ]]; then
+  gsettings set org.gnome.desktop.background picture-uri "file://${WALLPAPER}"
+  gsettings set org.gnome.desktop.background picture-uri-dark "file://${WALLPAPER}"
+  success "GNOME wallpaper changed → ${WALLPAPER}"
+elif [[ ! -f "${WALLPAPER}" ]]; then
+  warn "Wallpaper not found: ${WALLPAPER}"
+  warn "Place a matching image at that path to enable automatic wallpaper switching."
+fi
+
+# ─── Done ─────────────────────────────────────────────────────────────────────
+echo -e "\n${BOLD}${GREEN}✓ Theme switched to: ${THEME}${RESET}"
+echo -e "  WezTerm  → ${WEZTERM_THEMES[${THEME}]}"
+echo -e "  bat      → ${BAT_THEMES[${THEME}]}"
+echo -e "  Starship → palette: ${STARSHIP_PALETTES[${THEME}]}"
+echo -e "\nRestart your terminal or open a new tab for full effect."
