@@ -1,0 +1,13 @@
+# bat configuration
+# ~/.config/bat/config
+# Theme is managed by theme-switcher; default is Catppuccin Macchiato.
+# Run `theme-switcher catppuccin` to restore.
+
+--theme="Catppuccin Macchiato"
+--style="numbers,changes,header"
+--map-syntax "*.zshrc:Bash"
+--map-syntax "*.zshenv:Bash"
+--map-syntax ".env*:DotENV"
+--map-syntax "Makefile:Makefile"
+--map-syntax "*.toml:TOML"
+--italic-text=always
