@@ -69,12 +69,13 @@ The installer will:
 1. Install system prerequisites via `apt`
 2. Install **Nix** (multi-user / Determinate Nix)
 3. Install all CLI tools via `nix profile install`
-4. Download and install **JetBrainsMono Nerd Font**
-5. Set **Zsh** as your default shell
-6. Clone Zsh plugins (`autosuggestions`, `syntax-highlighting`)
-7. **Stow** all dotfiles into your `$HOME`
-8. Add the `scripts/` directory to `$PATH`
-9. Configure Flathub and GNOME Sushi (Quick Look)
+4. Install **WezTerm** via Flatpak + create a `.desktop` override to force XWayland (`env WAYLAND_DISPLAY=""`)
+5. Download and install **JetBrainsMono Nerd Font**
+6. Set **Zsh** as your default shell
+7. Clone Zsh plugins (`autosuggestions`, `syntax-highlighting`)
+8. **Stow** all dotfiles into your `$HOME`
+9. Add the `scripts/` directory to `$PATH`
+10. Configure Flathub and GNOME Sushi (Quick Look)
 
 ---
 
@@ -184,6 +185,13 @@ fuck        # → runs: git commit
 ### WezTerm
 
 File: `~/.wezterm.lua`
+
+> **Installation note:** WezTerm is installed via **Flatpak** (not Nix).
+> The Nix package has known issues on Wayland sessions.
+> The installer automatically creates a user-level `.desktop` override at
+> `~/.local/share/applications/org.wezfurlong.wezterm.desktop` that
+> prepends `env WAYLAND_DISPLAY=""` to the `Exec=` line, forcing WezTerm
+> to run under **XWayland** for stable rendering.
 
 Key features:
 - **No window decorations** (`window_decorations = "NONE"`) — pure, distraction-free terminal

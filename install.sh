@@ -50,7 +50,6 @@ export PATH="/nix/var/nix/profiles/default/bin:${HOME}/.nix-profile/bin:${PATH}"
 # ─── Step 3: Nix packages ─────────────────────────────────────────────────────
 step "Installing CLI tools via Nix"
 NIX_PACKAGES=(
-  nixpkgs#wezterm
   nixpkgs#starship
   nixpkgs#bat
   nixpkgs#eza
@@ -165,7 +164,65 @@ else
   success "Flathub added."
 fi
 
-# ─── Step 10: GNOME Quick Look (gnome-sushi) ──────────────────────────────────
+# ─── Step 10: WezTerm via Flatpak ────────────────────────────────────────────
+# WezTerm is installed via Flatpak (not Nix) because the Nix package has known
+# issues on Wayland sessions.  A user-level .desktop override is also created
+# to force XWayland mode (WAYLAND_DISPLAY=""), which avoids rendering/startup
+# crashes that occur with some Wayland compositors.
+step "Installing WezTerm via Flatpak"
+if flatpak list --app | grep -q "org.wezfurlong.wezterm"; then
+  warn "WezTerm (Flatpak) already installed — skipping."
+else
+  flatpak install -y flathub org.wezfurlong.wezterm
+  success "WezTerm installed via Flatpak."
+fi
+
+# Create a user-level .desktop override so WezTerm launches via XWayland.
+# This mirrors the fix of duplicating the system launcher into the user profile
+# and prepending 'env WAYLAND_DISPLAY=""' to the Exec line.
+WEZTERM_DESKTOP_DIR="${HOME}/.local/share/applications"
+WEZTERM_DESKTOP="${WEZTERM_DESKTOP_DIR}/org.wezfurlong.wezterm.desktop"
+mkdir -p "${WEZTERM_DESKTOP_DIR}"
+
+# Locate the system-exported desktop file (location varies by install scope)
+SYSTEM_DESKTOP=""
+for candidate in \
+  "/var/lib/flatpak/exports/share/applications/org.wezfurlong.wezterm.desktop" \
+  "${HOME}/.local/share/flatpak/exports/share/applications/org.wezfurlong.wezterm.desktop"
+do
+  [[ -f "${candidate}" ]] && SYSTEM_DESKTOP="${candidate}" && break
+done
+
+if [[ -n "${SYSTEM_DESKTOP}" ]]; then
+  cp "${SYSTEM_DESKTOP}" "${WEZTERM_DESKTOP}"
+  # Prepend 'env WAYLAND_DISPLAY=""' to every Exec= line
+  sed -i 's|^Exec=|Exec=env WAYLAND_DISPLAY="" |g' "${WEZTERM_DESKTOP}"
+  # Ensure the desktop DB picks up the change
+  update-desktop-database "${WEZTERM_DESKTOP_DIR}" 2>/dev/null || true
+  success "WezTerm desktop launcher overridden (XWayland forced)."
+else
+  # Flatpak may not export the .desktop file until the next login (this happens
+  # when Flatpak is freshly added to the system scope in the same session).
+  # Write a minimal but functional override; Flatpak will merge/supersede it on
+  # next desktop-database refresh.  The simplified "flatpak run" form is
+  # intentional here — without the system file we don't know the exact arch or
+  # branch flags, and plain "flatpak run" will pick the installed variant.
+  cat > "${WEZTERM_DESKTOP}" << 'EOF'
+[Desktop Entry]
+Name=WezTerm
+Comment=Wez's Terminal Emulator
+Exec=env WAYLAND_DISPLAY="" flatpak run org.wezfurlong.wezterm
+Icon=org.wezfurlong.wezterm
+Terminal=false
+Type=Application
+Categories=System;TerminalEmulator;
+StartupWMClass=org.wezfurlong.wezterm
+EOF
+  update-desktop-database "${WEZTERM_DESKTOP_DIR}" 2>/dev/null || true
+  success "WezTerm desktop launcher (XWayland override) written."
+fi
+
+# ─── Step 11: GNOME Quick Look (gnome-sushi) ──────────────────────────────────
 step "Enabling GNOME Sushi Quick Look"
 if command -v sushi &>/dev/null || dpkg -l gnome-sushi &>/dev/null 2>&1; then
   info "gnome-sushi is installed."
