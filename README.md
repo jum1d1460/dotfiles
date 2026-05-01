@@ -9,23 +9,24 @@
 1. [Philosophy](#philosophy)
 2. [Requirements](#requirements)
 3. [Quick Start](#quick-start)
-4. [Repository Structure](#repository-structure)
-5. [Tools Reference](#tools-reference)
+4. [Documentation Browser](#documentation-browser)
+5. [Repository Structure](#repository-structure)
+6. [Tools Reference](#tools-reference)
    - [Classic vs Modern Commands](#classic-vs-modern-commands)
-6. [Configuration Details](#configuration-details)
+7. [Configuration Details](#configuration-details)
    - [WezTerm](#wezterm)
    - [Starship](#starship)
    - [Zsh](#zsh)
    - [bat](#bat)
-7. [Theme System](#theme-system)
+8. [Theme System](#theme-system)
    - [Available Themes](#available-themes)
    - [Switching Themes](#switching-themes)
    - [Adding a New Theme](#adding-a-new-theme)
-8. [Quick Look / File Preview](#quick-look--file-preview)
-9. [Scripts](#scripts)
-10. [Stow Cheatsheet](#stow-cheatsheet)
-11. [Updating the System](#updating-the-system)
-12. [Troubleshooting](#troubleshooting)
+9. [Quick Look / File Preview](#quick-look--file-preview)
+10. [Scripts](#scripts)
+11. [Stow Cheatsheet](#stow-cheatsheet)
+12. [Updating the System](#updating-the-system)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -65,6 +66,25 @@ chmod +x install.sh
 exec zsh
 ```
 
+---
+
+## Documentation Browser
+
+After installation, an interactive documentation system is available directly in the terminal:
+
+```bash
+docs                    # open interactive browser (navigate all docs)
+docs tools              # CLI tools reference
+docs wezterm            # WezTerm key bindings and configuration
+docs zsh                # Zsh aliases, shortcuts, and settings
+docs themes             # Theme system — switching and creating themes
+docs scripts            # Scripts: up, theme-switcher, docs
+docs stow               # GNU Stow cheatsheet
+docs troubleshooting    # Common issues and fixes
+```
+
+The browser is powered by **[glow](https://github.com/charmbracelet/glow)** — a Markdown renderer with a TUI. Use ↑ ↓ to navigate, Enter to open, Esc to go back, `q` to quit.
+
 The installer will:
 1. Install system prerequisites via `apt`
 2. Install **Nix** (multi-user / Determinate Nix)
@@ -85,6 +105,16 @@ The installer will:
 dotfiles/
 ├── install.sh                  # One-shot installer
 ├── README.md                   # This file
+│
+├── docs/                       # ← In-terminal documentation (browse with: docs)
+│   ├── README.md               # Index / overview
+│   ├── tools.md                # CLI tools reference
+│   ├── wezterm.md              # WezTerm config & key bindings
+│   ├── zsh.md                  # Zsh config, aliases, shortcuts
+│   ├── themes.md               # Theme system
+│   ├── scripts.md              # Scripts reference
+│   ├── stow.md                 # GNU Stow guide
+│   └── troubleshooting.md      # Common issues
 │
 ├── zsh/                        # ← stow package
 │   └── .zshrc
@@ -107,7 +137,8 @@ dotfiles/
 │           └── up              # System update script
 │
 └── scripts/                    # Linked to ~/.local/bin/ by installer
-    └── theme-switcher          # Theme switching script
+    ├── theme-switcher          # Theme switching script
+    └── docs                    # Documentation browser (launches glow)
 ```
 
 > **How Stow works:** Running `stow <package>` from `~/.dotfiles` creates

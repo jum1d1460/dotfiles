@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# =============================================================================
+# docs — Browse the dotfiles documentation in the terminal
+# Usage:
+#   docs              Open interactive documentation browser (all docs)
+#   docs <name>       Open a specific doc (e.g. docs tools, docs wezterm)
+# =============================================================================
+set -euo pipefail
+
+BOLD='\033[1m'; CYAN='\033[0;36m'; RED='\033[0;31m'
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RESET='\033[0m'
+
+# ─── Locate the docs directory ────────────────────────────────────────────────
+# This script lives at ~/.dotfiles/scripts/docs (symlinked to ~/.local/bin/docs).
+# Resolve the real path of this script, then navigate up two levels to find
+# the dotfiles root and from there the docs/ directory.
+SCRIPT_REAL="$(realpath "${BASH_SOURCE[0]}")"
+DOTFILES_DIR="$(dirname "$(dirname "${SCRIPT_REAL}")")"
+DOCS_DIR="${DOTFILES_DIR}/docs"
+
+if [[ ! -d "${DOCS_DIR}" ]]; then
+  echo -e "${RED}Error:${RESET} Documentation directory not found: ${DOCS_DIR}" >&2
+  exit 1
+fi
+
+# ─── Require glow ─────────────────────────────────────────────────────────────
+if ! command -v glow &>/dev/null; then
+  echo -e "${RED}Error:${RESET} 'glow' is not installed." >&2
+  echo -e "Install it with:  ${CYAN}nix profile install nixpkgs#glow${RESET}" >&2
+  exit 1
+fi
+
+# ─── Open specific doc or interactive browser ─────────────────────────────────
+if [[ $# -gt 1 ]]; then
+  echo -e "${YELLOW}Warning:${RESET} Only the first argument is used. Extra arguments are ignored." >&2
+fi
+
+if [[ -n "${1:-}" ]]; then
+  # Try <name>.md first, then bare <name>
+  TARGET=""
+  if [[ -f "${DOCS_DIR}/${1}.md" ]]; then
+    TARGET="${DOCS_DIR}/${1}.md"
+  elif [[ -f "${DOCS_DIR}/${1}" ]]; then
+    TARGET="${DOCS_DIR}/${1}"
+  else
+    echo -e "${RED}Doc not found:${RESET} ${1}" >&2
+    echo ""
+    echo -e "${BOLD}Available docs:${RESET}"
+    for f in "${DOCS_DIR}"/*.md; do
+      name="$(basename "${f}" .md)"
+      echo -e "  ${CYAN}docs ${name}${RESET}"
+    done
+    exit 1
+  fi
+  glow -p "${TARGET}"
+else
+  # Interactive browser — list all docs in the directory
+  glow "${DOCS_DIR}"
+fi
