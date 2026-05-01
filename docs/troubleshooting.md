@@ -1,67 +1,67 @@
-# 🔧 Troubleshooting
+# 🔧 Solución de Problemas
 
-Common problems and their solutions.
+Problemas habituales y sus soluciones.
 
 ---
 
 ## Nix
 
-### `nix: command not found` after installation
+### `nix: command not found` tras la instalación
 
 ```bash
-# Source the Nix daemon environment
+# Cargar el entorno del daemon de Nix
 source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-# Or restart your terminal
+# O reiniciar la terminal
 exec zsh
 ```
 
-If it still fails, check that Nix was installed:
+Si sigue sin funcionar, comprueba que Nix está instalado:
 
 ```bash
 ls /nix/store
-# Should list many hash-named directories
+# Debe mostrar muchos directorios con nombre de hash
 ```
 
-### Nix package install fails
+### La instalación de un paquete Nix falla
 
 ```bash
-# Try again with verbose output
+# Intentarlo de nuevo con salida detallada
 nix profile install nixpkgs#bat --debug
 
-# Check internet connectivity
+# Comprobar conectividad a internet
 curl -I https://cache.nixos.org
 
-# Check disk space
+# Comprobar espacio en disco
 df -h /nix
 ```
 
-### `nix store gc` removes too much / breaks packages
+### `nix store gc` elimina demasiado / rompe paquetes
 
 ```bash
-# See what's in your profile
+# Ver qué hay en tu perfil
 nix profile list
 
-# Reinstall everything
+# Reinstalar todo
 nix profile install nixpkgs#bat nixpkgs#eza nixpkgs#fzf  # etc.
 
-# Or re-run the installer
+# O volver a ejecutar el instalador
 ~/.dotfiles/install.sh
 ```
 
 ---
 
-## Fonts & Icons
+## Fuentes e Iconos
 
-### Missing icons (boxes or question marks instead of symbols)
+### Iconos que no se muestran (cuadros o signos de interrogación en lugar de símbolos)
 
-Icons require **JetBrainsMono Nerd Font** to be installed and set in WezTerm.
+Los iconos requieren que **JetBrainsMono Nerd Font** esté instalada y configurada en WezTerm.
 
 ```bash
-# Check if the font is installed
+# Comprobar si la fuente está instalada
 fc-list | grep -i JetBrains
 
-# If missing, install it manually
+# Si falta, instalarla manualmente
 FONT_DIR="${HOME}/.local/share/fonts"
 mkdir -p "${FONT_DIR}"
 curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip" \
@@ -71,124 +71,124 @@ cp /tmp/jbm-fonts/*.ttf "${FONT_DIR}/"
 fc-cache -f
 ```
 
-Then verify WezTerm is using the correct font:
+Luego verifica que WezTerm usa la fuente correcta:
 
 ```bash
 grep "JetBrains" ~/.wezterm.lua
-# Should show: family = "JetBrainsMono Nerd Font"
+# Debe mostrar: family = "JetBrainsMono Nerd Font"
 ```
 
 ---
 
-## Zsh Plugins
+## Plugins de Zsh
 
-### Autosuggestions not working (no grey text)
+### Las autosuggestions no funcionan (sin texto gris)
 
 ```bash
-# Check plugin is loaded
+# Comprobar que el plugin está cargado
 echo $ZSH_AUTOSUGGESTIONS_VERSION
 
-# Check the plugin file exists
+# Comprobar que existe el archivo del plugin
 ls ~/.zsh/plugins/zsh-autosuggestions/
 
-# Re-clone if missing
+# Clonar de nuevo si falta
 git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \
   ~/.zsh/plugins/zsh-autosuggestions
 ```
 
-Then reload your shell:
+Luego recarga tu shell:
 
 ```bash
-reload   # alias for: source ~/.zshrc
+reload   # alias de: source ~/.zshrc
 ```
 
-### Syntax highlighting not working (no colours while typing)
+### El resaltado de sintaxis no funciona (sin colores al escribir)
 
 ```bash
-# Check plugin is loaded
+# Comprobar que el plugin está cargado
 echo $ZSH_HIGHLIGHT_VERSION
 
-# Check the plugin file exists
+# Comprobar que existe el archivo del plugin
 ls ~/.zsh/plugins/zsh-syntax-highlighting/
 
-# Re-clone if missing
+# Clonar de nuevo si falta
 git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \
   ~/.zsh/plugins/zsh-syntax-highlighting
 ```
 
-> **Note:** `zsh-syntax-highlighting` **must** be the last plugin sourced. Check `~/.zshrc` — it should be the last `source` line.
+> **Nota:** `zsh-syntax-highlighting` **debe** ser el último plugin que se cargue. Comprueba `~/.zshrc` — debe ser la última línea `source`.
 
 ---
 
 ## Stow
 
-### "Existing target is not owned by stow" error
+### Error "Existing target is not owned by stow"
 
 ```bash
-# Stow refuses to overwrite a file it didn't create.
-# Back up the conflicting file, then stow:
+# Stow se niega a sobreescribir un archivo que él no creó.
+# Haz una copia de seguridad del archivo conflictivo y luego stow:
 mv ~/.zshrc ~/.zshrc.bak
 stow zsh
 
-# Merge any custom settings from the backup into the dotfiles version
+# Fusiona cualquier configuración personalizada del backup en la versión de dotfiles
 ```
 
-### Symlinks not created after editing dotfiles
+### Los enlaces simbólicos no se crean tras editar los dotfiles
 
 ```bash
 cd ~/.dotfiles
 
-# Re-stow to update symlinks for any new files
+# Volver a hacer stow para actualizar los enlaces de los archivos nuevos
 stow --restow zsh wezterm starship bat bin
 
-# Verify
+# Verificar
 ls -la ~/.zshrc ~/.wezterm.lua ~/.config/starship.toml
 ```
 
 ---
 
-## Themes
+## Temas
 
-### WezTerm not changing colour after `theme-switcher`
+### WezTerm no cambia de color tras `theme-switcher`
 
 ```bash
-# Check the theme file was written
+# Comprobar que el archivo de tema se ha escrito
 cat ~/.config/current-theme
 
-# Try sending reload signal manually
+# Intentar enviar la señal de recarga manualmente
 pkill -SIGUSR1 -x wezterm-gui
 
-# If that doesn't work, close and reopen WezTerm
+# Si no funciona, cerrar y volver a abrir WezTerm
 ```
 
-### bat reporting "unknown theme"
+### bat informa de "unknown theme" (tema desconocido)
 
-bat ships with a limited set of built-in themes. Custom themes (like Catppuccin) need to be installed:
+bat incluye un conjunto limitado de temas integrados. Los temas personalizados (como Catppuccin) hay que instalarlos:
 
 ```bash
-# List available themes
+# Listar los temas disponibles
 bat --list-themes
 
-# Install Catppuccin Macchiato for bat
+# Instalar Catppuccin Macchiato para bat
 mkdir -p "$(bat --config-dir)/themes"
 curl -fsSL "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Macchiato.tmTheme" \
   -o "$(bat --config-dir)/themes/Catppuccin Macchiato.tmTheme"
 bat cache --build
 
-# Verify
+# Verificar
 bat --list-themes | grep Catppuccin
 ```
 
-### Starship palette not updating
+### La paleta de Starship no se actualiza
 
 ```bash
-# Check the current palette setting
+# Comprobar la configuración de paleta actual
 grep "^palette" ~/.config/starship.toml
 
-# Re-apply the theme
+# Volver a aplicar el tema
 theme-switcher catppuccin
 
-# Check the config file is writable
+# Comprobar que el archivo de configuración tiene permisos de escritura
 ls -la ~/.config/starship.toml
 ```
 
@@ -196,16 +196,16 @@ ls -la ~/.config/starship.toml
 
 ## WezTerm
 
-### WezTerm crashes or won't open on Wayland
+### WezTerm se cuelga o no abre en Wayland
 
-WezTerm is forced to use XWayland via a `.desktop` override. If the override is missing:
+WezTerm está forzado a usar XWayland mediante un override de `.desktop`. Si falta el override:
 
 ```bash
-# Check the override exists
+# Comprobar que el override existe
 cat ~/.local/share/applications/org.wezfurlong.wezterm.desktop
-# Should contain: Exec=env WAYLAND_DISPLAY="" ...
+# Debe contener: Exec=env WAYLAND_DISPLAY="" ...
 
-# Re-create it if missing (re-run the installer or create manually):
+# Recrearlo si falta (vuelve a ejecutar el instalador o créalo manualmente):
 cat > ~/.local/share/applications/org.wezfurlong.wezterm.desktop << 'EOF'
 [Desktop Entry]
 Name=WezTerm
@@ -219,13 +219,13 @@ EOF
 update-desktop-database ~/.local/share/applications
 ```
 
-### WezTerm config syntax error
+### Error de sintaxis en la configuración de WezTerm
 
 ```bash
-# Test the config without opening WezTerm
+# Probar la configuración sin abrir WezTerm
 flatpak run org.wezfurlong.wezterm --config-file ~/.wezterm.lua show-keys
 
-# Or check logs
+# O comprobar los registros
 journalctl --user -u app-flatpak-org.wezfurlong.wezterm.service --no-pager
 ```
 
@@ -233,70 +233,70 @@ journalctl --user -u app-flatpak-org.wezfurlong.wezterm.service --no-pager
 
 ## Shell (Zsh)
 
-### Default shell is not Zsh
+### El shell por defecto no es Zsh
 
 ```bash
-# Check current shell
+# Comprobar el shell actual
 echo $SHELL
 
-# Change to Zsh
+# Cambiar a Zsh
 ZSH_PATH="$(command -v zsh)"
 grep -qF "${ZSH_PATH}" /etc/shells || echo "${ZSH_PATH}" | sudo tee -a /etc/shells
 chsh -s "${ZSH_PATH}"
 
-# Log out and back in for the change to take effect
+# Cerrar sesión y volver a entrar para que el cambio surta efecto
 ```
 
-### `thefuck` not working
+### `thefuck` no funciona
 
 ```bash
-# Check if installed
+# Comprobar si está instalado
 thefuck --version
 
-# Check alias is set in shell
+# Comprobar que el alias está definido en el shell
 alias | grep fuck
 
-# Re-evaluate the alias in current session
+# Volver a evaluar el alias en la sesión actual
 eval "$(thefuck --alias)"
 ```
 
-### fzf key bindings not working (`Ctrl+R`, `Ctrl+T`)
+### Los atajos de fzf no funcionan (`Ctrl+R`, `Ctrl+T`)
 
 ```bash
-# Check fzf is installed
+# Comprobar que fzf está instalado
 fzf --version
 
-# Check the zsh integration is active
-fzf --zsh   # should output shell functions
+# Comprobar que la integración con zsh está activa
+fzf --zsh   # debe mostrar funciones de shell
 
-# It should be auto-initialized in .zshrc via:
+# Debe inicializarse automáticamente en .zshrc mediante:
 # eval "$(fzf --zsh)"
-# If missing, add it to ~/.dotfiles/zsh/.zshrc
+# Si falta, añádelo a ~/.dotfiles/zsh/.zshrc
 ```
 
 ---
 
 ## General
 
-### A command is not found after installation
+### Un comando no se encuentra tras la instalación
 
 ```bash
-# Check if it's installed in the Nix profile
-nix profile list | grep bat   # replace 'bat' with your tool
+# Comprobar si está instalado en el perfil Nix
+nix profile list | grep bat   # sustituye 'bat' por tu herramienta
 
-# Check if PATH includes Nix
+# Comprobar que PATH incluye Nix
 echo $PATH | tr ':' '\n' | grep nix
 
-# Source Nix environment
+# Cargar el entorno de Nix
 source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-# Or restart terminal
+# O reiniciar la terminal
 exec zsh
 ```
 
-### Re-running the installer safely
+### Volver a ejecutar el instalador de forma segura
 
-The installer is **idempotent** — it can be run multiple times safely. It skips steps that are already done:
+El instalador es **idempotente** — puede ejecutarse múltiples veces sin problemas. Omite los pasos que ya están completados:
 
 ```bash
 ~/.dotfiles/install.sh

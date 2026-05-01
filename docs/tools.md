@@ -1,315 +1,315 @@
-# 🛠️ CLI Tools Reference
+# 🛠️ Referencia de Herramientas CLI
 
-All tools are installed via **Nix** and available immediately after running `install.sh`.
-
----
-
-## Quick Replacement Map
-
-| Classic | Modern | Why upgrade? |
-|---------|--------|-------------|
-| `cat` | `bat` | Syntax highlighting, line numbers, Git change markers |
-| `ls` | `eza` | Icons, Git status, tree view, colour-coded types |
-| `find` | `fd` | Simpler syntax, much faster, respects `.gitignore` |
-| `grep` | `rg` | Much faster, respects `.gitignore`, better defaults |
-| `cd` | `cd` (zoxide) | Learns your habits — fuzzy jump to frequent dirs |
-| `top` | `btop` | Graphical, mouse-driven, shows GPU/net/disk |
-| `man` | `man` (via bat) | Syntax-highlighted man pages |
-| `--help` | `tldr` | Concise, practical examples |
+Todas las herramientas están instaladas a través de **Nix** y disponibles inmediatamente tras ejecutar `install.sh`.
 
 ---
 
-## bat — File Viewer with Syntax Highlighting
+## Tabla de Sustituciones
 
-**What it is:** `cat` replacement with syntax highlighting, line numbers, and Git change markers.
+| Clásico | Moderno | ¿Por qué cambiar? |
+|---------|---------|-------------------|
+| `cat` | `bat` | Resaltado de sintaxis, números de línea, marcadores de cambios Git |
+| `ls` | `eza` | Iconos, estado Git, vista en árbol, tipos con colores |
+| `find` | `fd` | Sintaxis más sencilla, mucho más rápido, respeta `.gitignore` |
+| `grep` | `rg` | Mucho más rápido, respeta `.gitignore`, mejores valores por defecto |
+| `cd` | `cd` (zoxide) | Aprende tus hábitos — salto difuso a directorios frecuentes |
+| `top` | `btop` | Gráfico, controlado con ratón, muestra GPU/red/disco |
+| `man` | `man` (vía bat) | Páginas de manual con resaltado de sintaxis |
+| `--help` | `tldr` | Ejemplos prácticos y concisos |
+
+---
+
+## bat — Visor de Archivos con Resaltado de Sintaxis
+
+**Qué es:** Sustituto de `cat` con resaltado de sintaxis, números de línea y marcadores de cambios Git.
 
 ```bash
-bat file.py              # view file with syntax highlighting
-bat -n file.py           # line numbers only, no other decorations
-bat --theme=Dracula file.py   # use a specific theme
-bat --list-themes        # list all available themes
-bat -l json file.txt     # force JSON syntax highlighting
-bat -A file.txt          # show non-printable characters
-bat -r 1:50 file.py      # show only lines 1–50
+bat archivo.py              # ver archivo con resaltado de sintaxis
+bat -n archivo.py           # solo números de línea, sin otras decoraciones
+bat --theme=Dracula arch.py # usar un tema específico
+bat --list-themes           # listar todos los temas disponibles
+bat -l json archivo.txt     # forzar resaltado JSON
+bat -A archivo.txt          # mostrar caracteres no imprimibles
+bat -r 1:50 archivo.py      # mostrar solo las líneas 1–50
 ```
 
-**Config file:** `~/.config/bat/config`  
-**Current theme:** managed by `theme-switcher` (default: Catppuccin Macchiato)
+**Archivo de configuración:** `~/.config/bat/config`  
+**Tema activo:** gestionado por `theme-switcher` (por defecto: Catppuccin Macchiato)
 
-> **Tip:** `bat` is aliased as `cat` in your shell. Just use `cat` as normal to get syntax highlighting automatically. Use `\cat` to bypass the alias.
+> **Consejo:** `bat` está definido como alias de `cat` en tu shell. Usa `cat` con normalidad para obtener resaltado automático. Usa `\cat` para saltarte el alias.
 
 ---
 
-## eza — Modern ls Replacement
+## eza — Sustituto Moderno de ls
 
-**What it is:** `ls` replacement with icons, Git status, colour-coded types, and tree view.
+**Qué es:** Sustituto de `ls` con iconos, estado Git, tipos con colores y vista en árbol.
 
 ```bash
-ls                       # basic listing (aliased to eza with icons)
-ll                       # long format with Git status
-la                       # long format, show hidden files
-lt                       # tree view (2 levels deep)
-lta                      # tree view with hidden files
+ls                       # listado básico (alias a eza con iconos)
+ll                       # formato largo con estado Git
+la                       # formato largo, incluye archivos ocultos
+lt                       # vista en árbol (2 niveles)
+lta                      # vista en árbol con archivos ocultos
 
-eza --long --git --icons          # detailed with Git status
-eza --tree --level=3              # tree, 3 levels deep
-eza --long --sort=modified        # sort by modification date
-eza --long --sort=size            # sort by size (largest last)
-eza -1                            # one file per line
-eza --group-directories-first     # directories at the top
+eza --long --git --icons          # detallado con estado Git
+eza --tree --level=3              # árbol, 3 niveles de profundidad
+eza --long --sort=modified        # ordenar por fecha de modificación
+eza --long --sort=size            # ordenar por tamaño (mayor al final)
+eza -1                            # un archivo por línea
+eza --group-directories-first     # directorios al principio
 ```
 
-**Git status column:** shows `M` (modified), `N` (new), `D` (deleted) next to tracked files.
+**Columna de estado Git:** muestra `M` (modificado), `N` (nuevo), `D` (eliminado) junto a los archivos rastreados.
 
 ---
 
-## fd — Fast File Finder
+## fd — Buscador de Archivos Rápido
 
-**What it is:** `find` replacement — simpler syntax, much faster, respects `.gitignore`.
+**Qué es:** Sustituto de `find` — sintaxis más sencilla, mucho más rápido, respeta `.gitignore`.
 
 ```bash
-fd pattern               # find files matching pattern (recursive from .)
-fd -e py                 # find files with .py extension
-fd -t d images           # find directories named "images"
-fd -t f -e md            # find Markdown files specifically
-fd -H pattern            # include hidden files
-fd -I pattern            # ignore .gitignore rules
-fd --max-depth 2 config  # search only 2 levels deep
-fd pattern ~/projects    # search in a specific directory
-fd -x bat {}             # run bat on each result (parallel exec)
+fd patrón               # buscar archivos que coincidan (recursivo desde .)
+fd -e py                # archivos con extensión .py
+fd -t d imagenes        # directorios llamados "imagenes"
+fd -t f -e md           # archivos Markdown específicamente
+fd -H patrón            # incluir archivos ocultos
+fd -I patrón            # ignorar las reglas de .gitignore
+fd --max-depth 2 config # buscar solo 2 niveles de profundidad
+fd patrón ~/proyectos   # buscar en un directorio específico
+fd -x bat {}            # ejecutar bat sobre cada resultado (ejecución paralela)
 ```
 
-> **Tip:** `fd` is used by `fzf` internally (see FZF_DEFAULT_COMMAND in your `.zshrc`).
+> **Consejo:** `fd` es utilizado internamente por `fzf` (ver FZF_DEFAULT_COMMAND en tu `.zshrc`).
 
 ---
 
-## rg (ripgrep) — Fast Text Search
+## rg (ripgrep) — Búsqueda de Texto Rápida
 
-**What it is:** `grep` replacement — much faster, respects `.gitignore`, great defaults.
+**Qué es:** Sustituto de `grep` — mucho más rápido, respeta `.gitignore`, excelentes valores por defecto.
 
 ```bash
-rg TODO                  # search for TODO in all files (recursive)
-rg "function foo"        # search for exact phrase
-rg -i todo               # case-insensitive search
-rg -l pattern            # show only filenames (not matching lines)
-rg -c pattern            # count matches per file
-rg -t py pattern         # search only in Python files
-rg -e pattern1 -e p2     # multiple patterns (OR)
-rg --no-ignore pattern   # ignore .gitignore rules
-rg pattern ~/projects    # search in a specific directory
-rg -A3 -B3 pattern       # show 3 lines context before and after
-rg -w word               # match whole words only
-rg --hidden pattern      # include hidden files
+rg TODO                  # buscar TODO en todos los archivos (recursivo)
+rg "function foo"        # buscar frase exacta
+rg -i todo               # búsqueda sin distinguir mayúsculas
+rg -l patrón             # mostrar solo los nombres de archivo (sin líneas)
+rg -c patrón             # contar coincidencias por archivo
+rg -t py patrón          # buscar solo en archivos Python
+rg -e patrón1 -e p2      # múltiples patrones (OR)
+rg --no-ignore patrón    # ignorar las reglas de .gitignore
+rg patrón ~/proyectos    # buscar en un directorio específico
+rg -A3 -B3 patrón        # mostrar 3 líneas de contexto antes y después
+rg -w palabra            # coincidir solo palabras completas
+rg --hidden patrón       # incluir archivos ocultos
 ```
 
 ---
 
-## fzf — Fuzzy Finder
+## fzf — Buscador Difuso
 
-**What it is:** Interactive fuzzy finder for files, history, and anything else.
+**Qué es:** Buscador difuso interactivo para archivos, historial y cualquier otra cosa.
 
-### Keyboard shortcuts (always available in your shell)
+### Atajos de teclado (siempre disponibles en tu shell)
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+R` | Fuzzy search command history |
-| `Ctrl+T` | Fuzzy file picker (pastes path to command line) |
-| `Alt+C` | Fuzzy directory picker (`cd` into selection) |
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+R` | Búsqueda difusa en el historial de comandos |
+| `Ctrl+T` | Selector difuso de archivos (pega la ruta en la línea de comandos) |
+| `Alt+C` | Selector difuso de directorios (`cd` al seleccionado) |
 
-### Using fzf directly
+### Uso directo de fzf
 
 ```bash
-fzf                      # interactive file picker
-vim $(fzf)               # open selected file in vim
-fzf --preview 'bat --color=always {}'    # with syntax preview
-fzf --multi              # select multiple files with Tab
-fzf -q "config"          # pre-fill search query
+fzf                      # selector interactivo de archivos
+vim $(fzf)               # abrir el archivo seleccionado en vim
+fzf --preview 'bat --color=always {}'    # con vista previa de sintaxis
+fzf --multi              # seleccionar múltiples archivos con Tab
+fzf -q "config"          # rellenar la búsqueda de antemano
 
-# Pipe anything into fzf
-git branch | fzf         # pick a git branch
-cat /etc/hosts | fzf     # filter /etc/hosts lines
-ls | fzf                 # pick a file from current dir
+# Pasar cualquier cosa por pipe a fzf
+git branch | fzf         # seleccionar una rama git
+cat /etc/hosts | fzf     # filtrar líneas de /etc/hosts
+ls | fzf                 # seleccionar un archivo del directorio actual
 
-# Combined pipeline
-git checkout $(git branch | fzf)   # interactive branch switch
+# Pipeline combinado
+git checkout $(git branch | fzf)   # cambio de rama interactivo
 ```
 
-> **Preview pane:** Your `FZF_DEFAULT_OPTS` already configures a `bat`-powered preview on the right. Press `Ctrl+/` to toggle it.
+> **Panel de vista previa:** Tu `FZF_DEFAULT_OPTS` ya configura una vista previa con `bat` a la derecha. Pulsa `Ctrl+/` para mostrarla u ocultarla.
 
 ---
 
-## zoxide — Smart cd
+## zoxide — cd Inteligente
 
-**What it is:** `cd` replacement that learns your navigation habits and lets you jump to directories by partial name.
+**Qué es:** Sustituto de `cd` que aprende tus hábitos de navegación y te permite saltar a directorios por nombre parcial.
 
 ```bash
-cd projects              # jumps to best matching dir you've visited
-cd proj/my               # partial path match
-cd -                     # go to previous directory (standard)
-zi                       # interactive picker of visited dirs (with fzf)
+cd proyectos             # salta al directorio más relevante que hayas visitado
+cd proy/mi               # coincidencia parcial de ruta
+cd -                     # ir al directorio anterior (comportamiento estándar)
+zi                       # selector interactivo de directorios visitados (con fzf)
 ```
 
-> **How it works:** Every `cd` command is recorded. `zoxide` scores directories by frequency and recency and jumps to the best match. The more you use a directory, the easier it is to jump to.
+> **Cómo funciona:** Cada comando `cd` queda registrado. `zoxide` puntúa los directorios por frecuencia y recencia y salta al mejor resultado. Cuanto más uses un directorio, más fácil es llegar a él.
 
-> **Note:** `zoxide` is transparently aliased as `cd`, so no change to your existing muscle memory.
+> **Nota:** `zoxide` está aliasado de forma transparente como `cd`, por lo que no hay que cambiar ningún hábito.
 
 ---
 
-## delta — Enhanced Git Diffs
+## delta — Diffs de Git Mejorados
 
-**What it is:** A diff viewer for Git with side-by-side diffs, syntax highlighting, and line numbers. It replaces Git's built-in pager automatically.
+**Qué es:** Visor de diffs para Git con diffs lado a lado, resaltado de sintaxis y números de línea. Reemplaza automáticamente el paginador integrado de Git.
 
 ```bash
-git diff                 # automatically uses delta
-git diff --staged        # staged changes, also via delta
-git log -p               # commit history with diffs
-git show HEAD            # show last commit, rendered by delta
-gd                       # alias: git diff via delta
-gds                      # alias: git diff --staged via delta
+git diff                 # usa delta automáticamente
+git diff --staged        # cambios en el área de preparación, también vía delta
+git log -p               # historial de commits con diffs
+git show HEAD            # mostrar el último commit, renderizado por delta
+gd                       # alias: git diff vía delta
+gds                      # alias: git diff --staged vía delta
 ```
 
-> **No configuration needed** — delta is set as your `GIT_PAGER` in `.zshrc`. All `git diff` commands automatically go through it.
+> **Sin configuración adicional** — delta está definido como tu `GIT_PAGER` en `.zshrc`. Todos los comandos `git diff` pasan por él automáticamente.
 
 ---
 
-## lazygit — TUI Git Client
+## lazygit — Cliente Git en TUI
 
-**What it is:** Full-featured terminal UI for Git — stage files, commit, merge, rebase, browse history, all without leaving the terminal.
+**Qué es:** Interfaz de terminal completa para Git — preparar archivos, hacer commits, fusionar, rebasear y explorar el historial sin salir de la terminal.
 
 ```bash
-lg                       # open lazygit (alias)
-lazygit                  # same, without alias
+lg                       # abrir lazygit (alias)
+lazygit                  # lo mismo, sin alias
 ```
 
-### Key bindings inside lazygit
+### Atajos de teclado dentro de lazygit
 
-| Key | Action |
-|-----|--------|
-| ↑ ↓ | Navigate files / commits |
-| `Space` | Stage / unstage file |
-| `c` | Commit staged changes |
+| Tecla | Acción |
+|-------|--------|
+| ↑ ↓ | Navegar por archivos / commits |
+| `Space` | Preparar / quitar del área de preparación |
+| `c` | Hacer commit de los cambios preparados |
 | `p` | Push |
 | `P` | Pull |
-| `b` | Branch menu |
-| `m` | Merge |
-| `r` | Rebase |
-| `z` | Undo last action |
-| `?` | Show all key bindings |
-| `q` | Quit |
+| `b` | Menú de ramas |
+| `m` | Fusionar (merge) |
+| `r` | Rebasear |
+| `z` | Deshacer la última acción |
+| `?` | Mostrar todos los atajos de teclado |
+| `q` | Salir |
 
 ---
 
-## btop — System Monitor
+## btop — Monitor del Sistema
 
-**What it is:** Graphical, mouse-driven system monitor showing CPU, memory, network, disk, and processes.
+**Qué es:** Monitor del sistema gráfico y controlado con ratón que muestra CPU, memoria, red, disco y procesos.
 
 ```bash
-top                      # aliased to btop
-btop                     # direct call
+top                      # alias a btop
+btop                     # llamada directa
 ```
 
-### Inside btop
+### Dentro de btop
 
-| Key | Action |
-|-----|--------|
-| `F1` or `?` | Help |
-| `F2` | Settings |
-| `↑ ↓` | Navigate processes |
-| `k` | Kill selected process |
-| `f` | Filter processes |
-| `q` | Quit |
-| Mouse | Click to interact with any panel |
+| Tecla | Acción |
+|-------|--------|
+| `F1` o `?` | Ayuda |
+| `F2` | Configuración |
+| `↑ ↓` | Navegar por procesos |
+| `k` | Terminar el proceso seleccionado |
+| `f` | Filtrar procesos |
+| `q` | Salir |
+| Ratón | Hacer clic para interactuar con cualquier panel |
 
 ---
 
-## tldr — Practical Command Examples
+## tldr — Ejemplos Prácticos de Comandos
 
-**What it is:** Simplified man pages with practical examples instead of full technical documentation.
+**Qué es:** Páginas de manual simplificadas con ejemplos prácticos en lugar de documentación técnica completa.
 
 ```bash
-tldr git                 # examples for git
-tldr tar                 # how to use tar without googling
-tldr fd                  # fd examples
-tldr curl                # curl examples
-tldr --list              # list all available pages
-tldr --update            # update the local cache
+tldr git                 # ejemplos de git
+tldr tar                 # cómo usar tar sin buscar en Google
+tldr fd                  # ejemplos de fd
+tldr curl                # ejemplos de curl
+tldr --list              # listar todas las páginas disponibles
+tldr --update            # actualizar la caché local
 ```
 
-> **Tip:** `alias help='tldr'` is set in your `.zshrc`. You can run `help git` as a shortcut.
+> **Consejo:** `alias help='tldr'` está definido en tu `.zshrc`. Puedes ejecutar `help git` como atajo.
 
 ---
 
-## thefuck — Command Corrector
+## thefuck — Corrector de Comandos
 
-**What it is:** Automatically corrects your last mistyped command. Just type `fuck` after a mistake.
+**Qué es:** Corrige automáticamente el último comando mal escrito. Solo escribe `fuck` después de un error.
 
 ```bash
-git comit -m "msg"       # typo!
-fuck                     # → runs: git commit -m "msg"
+git comit -m "msg"       # ¡error tipográfico!
+fuck                     # → ejecuta: git commit -m "msg"
 
-apt-get install vim      # forgot sudo
-fuck                     # → runs: sudo apt-get install vim
+apt-get install vim      # olvidaste sudo
+fuck                     # → ejecuta: sudo apt-get install vim
 
-gti status               # typo for git
-fuck                     # → runs: git status
+gti status               # error tipográfico de git
+fuck                     # → ejecuta: git status
 ```
 
-> **How it works:** `thefuck --alias` is evaluated in your `.zshrc`, which sets up the `fuck` command. It analyses the previous command's error and suggests the most likely fix.
+> **Cómo funciona:** `thefuck --alias` se evalúa en tu `.zshrc`, lo que configura el comando `fuck`. Analiza el error del comando anterior y sugiere la corrección más probable.
 
 ---
 
-## glow — Markdown Renderer
+## glow — Renderizador de Markdown
 
-**What it is:** Beautiful Markdown rendering in the terminal, with an interactive TUI for browsing multiple files.
+**Qué es:** Renderizado hermoso de Markdown en la terminal, con una TUI interactiva para explorar múltiples archivos.
 
 ```bash
-glow README.md           # render a Markdown file
-glow -p README.md        # render in pager (scrollable, press q to exit)
-glow .                   # browse all .md files in current dir (TUI)
-glow ~/path/to/docs/     # browse a docs directory interactively
-glow https://...         # render remote Markdown (URL)
+glow README.md           # renderizar un archivo Markdown
+glow -p README.md        # renderizar en paginador (desplazable, pulsa q para salir)
+glow .                   # explorar todos los archivos .md del directorio actual (TUI)
+glow ~/ruta/a/docs/      # explorar un directorio de documentación de forma interactiva
+glow https://...         # renderizar Markdown remoto (URL)
 ```
 
-### Inside glow TUI
+### Dentro de la TUI de glow
 
-| Key | Action |
-|-----|--------|
-| ↑ ↓ | Navigate files |
-| `Enter` | Open file |
-| `Esc` | Go back |
-| `/` | Search |
-| `q` | Quit |
+| Tecla | Acción |
+|-------|--------|
+| ↑ ↓ | Navegar por archivos |
+| `Enter` | Abrir archivo |
+| `Esc` | Volver |
+| `/` | Buscar |
+| `q` | Salir |
 
-> **Tip:** This documentation system uses `glow`. Run `docs` to open it.
+> **Consejo:** Este sistema de documentación usa `glow`. Ejecuta `docs` para abrirlo.
 
 ---
 
-## starship — Shell Prompt
+## starship — Prompt del Shell
 
-**What it is:** A minimal, fast, and highly configurable shell prompt that shows useful context (directory, git branch, command duration).
+**Qué es:** Un prompt de shell minimal, rápido y altamente configurable que muestra información útil de contexto (directorio, rama git, duración del comando).
 
 ```bash
-# No direct commands — it's your prompt.
-# Config file: ~/.config/starship.toml
+# Sin comandos directos — es tu prompt.
+# Archivo de configuración: ~/.config/starship.toml
 
-starship explain         # explain every segment in the current prompt
-starship timings         # show how long each module takes to render
-starship bug-report      # generate a bug report
+starship explain         # explica cada segmento del prompt actual
+starship timings         # muestra cuánto tarda en renderizarse cada módulo
+starship bug-report      # genera un informe de errores
 ```
 
-**Prompt segments:**
+**Segmentos del prompt:**
 
 ```
-~/projects/my-app  main ⇡2 !  took 3s
+~/proyectos/mi-app  main ⇡2 !  took 3s
 ❯
 ```
 
-| Segment | Meaning |
-|---------|---------|
-| `~/projects/my-app` | Current directory (truncated) |
-| ` main` | Git branch name |
-| `⇡2` | 2 commits ahead of remote |
-| `!` | Uncommitted modifications |
-| `took 3s` | Last command took 3 seconds |
-| `❯` (green) | Last command succeeded |
-| `❯` (red) | Last command failed |
+| Segmento | Significado |
+|----------|-------------|
+| `~/proyectos/mi-app` | Directorio actual (truncado) |
+| ` main` | Nombre de la rama Git |
+| `⇡2` | 2 commits por delante del remoto |
+| `!` | Modificaciones sin confirmar |
+| `took 3s` | El último comando tardó 3 segundos |
+| `❯` (verde) | El último comando tuvo éxito |
+| `❯` (rojo) | El último comando falló |

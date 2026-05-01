@@ -1,117 +1,117 @@
-# 🖥️ WezTerm — Terminal Emulator
+# 🖥️ WezTerm — Emulador de Terminal
 
-WezTerm is a GPU-accelerated terminal emulator configured entirely in Lua.
+WezTerm es un emulador de terminal acelerado por GPU configurado completamente en Lua.
 
-**Config file:** `~/.wezterm.lua` (symlinked from `~/.dotfiles/wezterm/.wezterm.lua`)  
-**Installed via:** Flatpak (`org.wezfurlong.wezterm`)
+**Archivo de configuración:** `~/.wezterm.lua` (enlace simbólico de `~/.dotfiles/wezterm/.wezterm.lua`)  
+**Instalado mediante:** Flatpak (`org.wezfurlong.wezterm`)
 
 ---
 
-## Starting WezTerm
+## Iniciar WezTerm
 
 ```bash
-# From GNOME application launcher: search "WezTerm"
-# From another terminal:
+# Desde el lanzador de aplicaciones de GNOME: busca "WezTerm"
+# Desde otra terminal:
 flatpak run org.wezfurlong.wezterm
 ```
 
-> **Note:** WezTerm is forced to run under XWayland (not native Wayland). This is intentional — the `install.sh` creates a `.desktop` override at `~/.local/share/applications/org.wezfurlong.wezterm.desktop` with `WAYLAND_DISPLAY=""` to avoid rendering issues on Wayland compositors.
+> **Nota:** WezTerm está forzado a ejecutarse bajo XWayland (no Wayland nativo). Esto es intencionado — `install.sh` crea un override de `.desktop` en `~/.local/share/applications/org.wezfurlong.wezterm.desktop` con `WAYLAND_DISPLAY=""` para evitar problemas de renderizado en compositors Wayland.
 
 ---
 
-## Visual Style
+## Estilo Visual
 
-| Setting | Value |
-|---------|-------|
-| Font | JetBrainsMono Nerd Font, 13pt |
-| Line height | 1.2 |
-| Background opacity | 90% (glass effect) |
-| Window decorations | None (no title bar, no borders) |
-| Padding | 12px horizontal, 10px vertical |
-| Cursor | Blinking bar |
-| Tab bar | Bottom of window, hidden if single tab |
-| Scrollback | 10,000 lines |
-| Rendering | WebGPU (hardware accelerated) |
-| FPS | Up to 120 fps |
-
----
-
-## Leader Key
-
-The **leader key** is `Ctrl+A` (tmux-style). Press and release it, then press the second key within 1 second.
+| Ajuste | Valor |
+|--------|-------|
+| Fuente | JetBrainsMono Nerd Font, 13pt |
+| Altura de línea | 1.2 |
+| Opacidad del fondo | 90% (efecto cristal) |
+| Decoraciones de ventana | Ninguna (sin barra de título ni bordes) |
+| Relleno | 12px horizontal, 10px vertical |
+| Cursor | Barra parpadeante |
+| Barra de pestañas | Parte inferior, oculta si hay una sola pestaña |
+| Desplazamiento | 10.000 líneas |
+| Renderizado | WebGPU (acelerado por hardware) |
+| FPS | Hasta 120 fps |
 
 ---
 
-## Key Bindings
+## Tecla Líder
 
-### Pane Management
-
-| Binding | Action |
-|---------|--------|
-| `Ctrl+A` → `-` | Split pane **vertically** (new pane below) |
-| `Ctrl+A` → `\|` | Split pane **horizontally** (new pane to the right) |
-| `Ctrl+A` → `w` | **Close** current pane (with confirmation) |
-
-### Pane Navigation (Vim-style)
-
-| Binding | Action |
-|---------|--------|
-| `Ctrl+A` → `h` | Move to pane on the **left** |
-| `Ctrl+A` → `j` | Move to pane **below** |
-| `Ctrl+A` → `k` | Move to pane **above** |
-| `Ctrl+A` → `l` | Move to pane on the **right** |
-
-### Pane Resizing
-
-| Binding | Action |
-|---------|--------|
-| `Ctrl+A` → `H` | Resize pane **left** (shrink width) |
-| `Ctrl+A` → `J` | Resize pane **down** (grow height) |
-| `Ctrl+A` → `K` | Resize pane **up** (shrink height) |
-| `Ctrl+A` → `L` | Resize pane **right** (grow width) |
-
-### Tabs
-
-| Binding | Action |
-|---------|--------|
-| `Ctrl+A` → `c` | **New** tab |
-| `Ctrl+A` → `n` | **Next** tab |
-| `Ctrl+A` → `p` | **Previous** tab |
-
-### Other
-
-| Binding | Action |
-|---------|--------|
-| `Ctrl+A` → `[` | Enter **copy mode** (scroll/select text) |
-| `Ctrl+=` | Increase font size |
-| `Ctrl+-` | Decrease font size |
-| `Ctrl+0` | Reset font size to default |
-| Right-click | **Paste** from clipboard |
+La **tecla líder** es `Ctrl+A` (estilo tmux). Presiónala y suéltala, luego pulsa la segunda tecla en menos de 1 segundo.
 
 ---
 
-## Copy Mode
+## Atajos de Teclado
 
-Enter copy mode with `Ctrl+A` → `[`. Navigate and select text using keyboard.
+### Gestión de Paneles
 
-| Key | Action |
-|-----|--------|
-| `h j k l` | Move cursor (Vim-style) |
-| `v` | Start selection |
-| `V` | Select whole line |
-| `y` | Yank (copy) selection |
-| `q` or `Esc` | Exit copy mode |
-| `Ctrl+F` | Search forward |
-| `n` / `N` | Next / previous search match |
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` → `-` | Dividir panel **verticalmente** (nuevo panel debajo) |
+| `Ctrl+A` → `\|` | Dividir panel **horizontalmente** (nuevo panel a la derecha) |
+| `Ctrl+A` → `w` | **Cerrar** panel actual (con confirmación) |
+
+### Navegación por Paneles (estilo Vim)
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` → `h` | Moverse al panel de la **izquierda** |
+| `Ctrl+A` → `j` | Moverse al panel de **abajo** |
+| `Ctrl+A` → `k` | Moverse al panel de **arriba** |
+| `Ctrl+A` → `l` | Moverse al panel de la **derecha** |
+
+### Redimensionar Paneles
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` → `H` | Redimensionar panel hacia la **izquierda** (reducir ancho) |
+| `Ctrl+A` → `J` | Redimensionar panel hacia **abajo** (aumentar alto) |
+| `Ctrl+A` → `K` | Redimensionar panel hacia **arriba** (reducir alto) |
+| `Ctrl+A` → `L` | Redimensionar panel hacia la **derecha** (aumentar ancho) |
+
+### Pestañas
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` → `c` | **Nueva** pestaña |
+| `Ctrl+A` → `n` | Pestaña **siguiente** |
+| `Ctrl+A` → `p` | Pestaña **anterior** |
+
+### Otros
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+A` → `[` | Entrar en **modo copia** (desplazarse y seleccionar texto) |
+| `Ctrl+=` | Aumentar tamaño de fuente |
+| `Ctrl+-` | Reducir tamaño de fuente |
+| `Ctrl+0` | Restablecer tamaño de fuente por defecto |
+| Clic derecho | **Pegar** desde el portapapeles |
 
 ---
 
-## Theme Integration
+## Modo Copia
 
-WezTerm reads its colour scheme from `~/.config/current-theme` on startup:
+Entra en modo copia con `Ctrl+A` → `[`. Navega y selecciona texto con el teclado.
+
+| Tecla | Acción |
+|-------|--------|
+| `h j k l` | Mover el cursor (estilo Vim) |
+| `v` | Iniciar selección |
+| `V` | Seleccionar línea completa |
+| `y` | Copiar selección (yank) |
+| `q` o `Esc` | Salir del modo copia |
+| `Ctrl+F` | Buscar hacia adelante |
+| `n` / `N` | Siguiente / anterior coincidencia de búsqueda |
+
+---
+
+## Integración de Temas
+
+WezTerm lee su esquema de colores desde `~/.config/current-theme` al iniciar:
 
 ```lua
--- In ~/.wezterm.lua:
+-- En ~/.wezterm.lua:
 local themes = {
   catppuccin   = "Catppuccin Macchiato",
   ["tokyo-night"] = "Tokyo Night",
@@ -119,43 +119,43 @@ local themes = {
 }
 ```
 
-Switch themes with:
+Cambia de tema con:
 
 ```bash
-theme-switcher catppuccin    # warm, pastel (default)
-theme-switcher tokyo-night   # cool, dark blue/purple
-theme-switcher dracula       # high-contrast pink/purple
+theme-switcher catppuccin    # cálido, pastel (por defecto)
+theme-switcher tokyo-night   # frío, azul oscuro/morado
+theme-switcher dracula       # alto contraste rosa/morado
 ```
 
-The script sends `SIGUSR1` to reload WezTerm live — no restart needed.
+El script envía `SIGUSR1` para recargar WezTerm en directo — no se necesita reiniciar.
 
 ---
 
-## Modifying the Configuration
+## Modificar la Configuración
 
-Edit `~/.dotfiles/wezterm/.wezterm.lua` and reload WezTerm:
+Edita `~/.dotfiles/wezterm/.wezterm.lua` y recarga WezTerm:
 
 ```bash
-# Reload config without restarting:
-# Press Ctrl+A then Shift+R  (or just close and reopen WezTerm)
+# Recargar la configuración sin reiniciar:
+# Pulsa Ctrl+A y luego Shift+R  (o simplemente cierra y vuelve a abrir WezTerm)
 
-# Edit config:
+# Editar la configuración:
 vim ~/.dotfiles/wezterm/.wezterm.lua
 ```
 
-WezTerm auto-reloads its config when the file changes. You'll see a notification in the top-right corner.
+WezTerm recarga su configuración automáticamente cuando el archivo cambia. Verás una notificación en la esquina superior derecha.
 
 ---
 
-## Useful WezTerm CLI Commands
+## Comandos CLI Útiles de WezTerm
 
 ```bash
-# Check WezTerm version
+# Comprobar la versión de WezTerm
 flatpak run org.wezfurlong.wezterm --version
 
-# Open WezTerm with a specific command
+# Abrir WezTerm con un comando específico
 flatpak run org.wezfurlong.wezterm start -- htop
 
-# List all available colour schemes
+# Listar todos los esquemas de colores disponibles
 flatpak run org.wezfurlong.wezterm ls-fonts
 ```

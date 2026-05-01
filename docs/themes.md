@@ -1,47 +1,47 @@
-# 🎨 Theme System
+# 🎨 Sistema de Temas
 
-Your terminal environment uses a unified theme system that changes the colour scheme of **WezTerm**, **bat**, and **Starship** simultaneously with a single command.
-
----
-
-## Available Themes
-
-| Theme | ID | Style |
-|-------|----|-------|
-| Catppuccin Macchiato | `catppuccin` | Warm, soft pastels — **default** |
-| Tokyo Night | `tokyo-night` | Cool dark blues and purples |
-| Dracula | `dracula` | High-contrast pink and purple |
+Tu entorno de terminal utiliza un sistema de temas unificado que cambia el esquema de colores de **WezTerm**, **bat** y **Starship** simultáneamente con un solo comando.
 
 ---
 
-## Switching Themes
+## Temas Disponibles
+
+| Tema | ID | Estilo |
+|------|----|--------|
+| Catppuccin Macchiato | `catppuccin` | Pasteles cálidos y suaves — **por defecto** |
+| Tokyo Night | `tokyo-night` | Azules y morados oscuros y fríos |
+| Dracula | `dracula` | Alto contraste con rosas y morados |
+
+---
+
+## Cambiar de Tema
 
 ```bash
-theme-switcher catppuccin      # warm pastel (default)
-theme-switcher tokyo-night     # cool dark blue/purple
-theme-switcher dracula         # high contrast pink/purple
+theme-switcher catppuccin      # pasteles cálidos (por defecto)
+theme-switcher tokyo-night     # azul oscuro/morado frío
+theme-switcher dracula         # alto contraste rosa/morado
 ```
 
-The command updates all three components **simultaneously**:
+El comando actualiza los tres componentes **simultáneamente**:
 
-1. **WezTerm** — writes `~/.config/current-theme` and sends `SIGUSR1` to reload live
-2. **bat** — updates `~/.config/bat/config` with `--theme=<name>`
-3. **Starship** — updates the `palette =` line in `~/.config/starship.toml`
-4. **GNOME wallpaper** _(optional)_ — if a matching image exists in `~/.local/share/wallpapers/`
+1. **WezTerm** — escribe `~/.config/current-theme` y envía `SIGUSR1` para recarga en directo
+2. **bat** — actualiza `~/.config/bat/config` con `--theme=<nombre>`
+3. **Starship** — actualiza la línea `palette =` en `~/.config/starship.toml`
+4. **Fondo de GNOME** _(opcional)_ — si existe una imagen correspondiente en `~/.local/share/wallpapers/`
 
-> **Live reload:** WezTerm reloads instantly without restarting. bat and Starship pick up the change immediately in new commands. For the current shell session, run `reload` to refresh bat's theme variable.
+> **Recarga en directo:** WezTerm se recarga instantáneamente sin reiniciar. bat y Starship adoptan el cambio de inmediato en los nuevos comandos. Para la sesión de shell actual, ejecuta `reload` para refrescar la variable de tema de bat.
 
 ---
 
-## How the Theme File Works
+## Cómo Funciona el Archivo de Tema
 
-The active theme name is stored in a plain text file:
+El nombre del tema activo se almacena en un archivo de texto plano:
 
 ```bash
-cat ~/.config/current-theme    # shows active theme name, e.g. "catppuccin"
+cat ~/.config/current-theme    # muestra el tema activo, ej. "catppuccin"
 ```
 
-WezTerm reads this file on startup via `~/.wezterm.lua`:
+WezTerm lee este archivo al iniciar mediante `~/.wezterm.lua`:
 
 ```lua
 local f = io.open(wezterm.home_dir .. "/.config/current-theme", "r")
@@ -51,28 +51,28 @@ config.color_scheme = themes[name] or themes["catppuccin"]
 
 ---
 
-## Adding a New Theme
+## Añadir un Nuevo Tema
 
-Follow these 4 steps to add a custom theme (example: `gruvbox`):
+Sigue estos 4 pasos para añadir un tema personalizado (ejemplo: `gruvbox`):
 
-### Step 1 — Register it in `scripts/theme-switcher`
+### Paso 1 — Regístralo en `scripts/theme-switcher`
 
-Open `~/.dotfiles/scripts/theme-switcher` and add to each array:
+Abre `~/.dotfiles/scripts/theme-switcher` y añádelo a cada array:
 
 ```bash
-# WezTerm colour scheme name (must match a built-in or custom scheme):
+# Nombre del esquema de colores de WezTerm (debe coincidir con uno integrado o personalizado):
 ["gruvbox"]="GruvboxDark"
 
-# bat theme name (run `bat --list-themes` to see available names):
+# Nombre del tema de bat (ejecuta `bat --list-themes` para ver los disponibles):
 ["gruvbox"]="gruvbox-dark"
 
-# Starship palette name (must match a [palettes.xxx] block in starship.toml):
+# Nombre de la paleta de Starship (debe coincidir con un bloque [palettes.xxx] en starship.toml):
 ["gruvbox"]="gruvbox"
 ```
 
-### Step 2 — Add a Starship palette
+### Paso 2 — Añade una paleta de Starship
 
-Open `~/.dotfiles/starship/.config/starship.toml` and add:
+Abre `~/.dotfiles/starship/.config/starship.toml` y añade:
 
 ```toml
 [palettes.gruvbox]
@@ -86,14 +86,14 @@ aqua       = "#689d6a"
 gray       = "#a89984"
 ```
 
-### Step 3 — (Optional) Add a wallpaper
+### Paso 3 — (Opcional) Añade un fondo de pantalla
 
 ```bash
 mkdir -p ~/.local/share/wallpapers
-cp ~/Downloads/gruvbox-wallpaper.jpg ~/.local/share/wallpapers/gruvbox.jpg
+cp ~/Descargas/fondo-gruvbox.jpg ~/.local/share/wallpapers/gruvbox.jpg
 ```
 
-### Step 4 — Apply it
+### Paso 4 — Aplícalo
 
 ```bash
 theme-switcher gruvbox
@@ -101,82 +101,82 @@ theme-switcher gruvbox
 
 ---
 
-## Colours per Theme
+## Colores por Tema
 
-### Catppuccin Macchiato (default)
+### Catppuccin Macchiato (por defecto)
 
-Warm, pastel colour palette. Based on the [Catppuccin](https://catppuccin.com/) theme family.
+Paleta de colores cálida y pastel. Basada en la familia de temas [Catppuccin](https://catppuccin.com/).
 
-| Colour | Hex |
-|--------|-----|
-| Background | `#24273a` |
-| Text | `#cad3f5` |
-| Blue | `#8aadf4` |
-| Green | `#a6da95` |
-| Red | `#ed8796` |
-| Purple/Mauve | `#c6a0f6` |
-| Yellow/Peach | `#f5a97f` |
+| Color | Hex |
+|-------|-----|
+| Fondo | `#24273a` |
+| Texto | `#cad3f5` |
+| Azul | `#8aadf4` |
+| Verde | `#a6da95` |
+| Rojo | `#ed8796` |
+| Morado/Mauve | `#c6a0f6` |
+| Amarillo/Melocotón | `#f5a97f` |
 
 ### Tokyo Night
 
-Cool, dark theme inspired by Tokyo at night. Popular with developers who prefer blues and purples.
+Tema frío y oscuro inspirado en Tokio de noche. Popular entre desarrolladores que prefieren azules y morados.
 
-| Colour | Hex |
-|--------|-----|
-| Background | `#1a1b26` |
-| Blue | `#7aa2f7` |
-| Cyan | `#7dcfff` |
-| Green | `#9ece6a` |
+| Color | Hex |
+|-------|-----|
+| Fondo | `#1a1b26` |
+| Azul | `#7aa2f7` |
+| Cian | `#7dcfff` |
+| Verde | `#9ece6a` |
 | Magenta | `#bb9af7` |
-| Red | `#f7768e` |
-| Yellow | `#e0af68` |
+| Rojo | `#f7768e` |
+| Amarillo | `#e0af68` |
 
 ### Dracula
 
-High-contrast theme with vivid pinks and purples. Excellent readability, popular choice for presentations.
+Tema de alto contraste con rosas y morados vivos. Excelente legibilidad, opción popular para presentaciones.
 
-| Colour | Hex |
-|--------|-----|
-| Background | `#282a36` |
-| Foreground | `#f8f8f2` |
-| Pink | `#ff79c6` |
-| Purple | `#bd93f9` |
-| Cyan | `#8be9fd` |
-| Green | `#50fa7b` |
-| Red | `#ff5555` |
-| Yellow | `#f1fa8c` |
+| Color | Hex |
+|-------|-----|
+| Fondo | `#282a36` |
+| Primer plano | `#f8f8f2` |
+| Rosa | `#ff79c6` |
+| Morado | `#bd93f9` |
+| Cian | `#8be9fd` |
+| Verde | `#50fa7b` |
+| Rojo | `#ff5555` |
+| Amarillo | `#f1fa8c` |
 
 ---
 
-## Troubleshooting Themes
+## Solución de Problemas con los Temas
 
-**WezTerm not changing colour:**
+**WezTerm no cambia de color:**
 
 ```bash
-# Check what theme is currently active
+# Comprobar qué tema está activo actualmente
 cat ~/.config/current-theme
 
-# Force reload WezTerm (close and reopen if SIGUSR1 didn't work)
-# Or send signal manually:
+# Forzar la recarga de WezTerm (cierra y abre si SIGUSR1 no funcionó)
+# O enviar la señal manualmente:
 pkill -SIGUSR1 -x wezterm-gui
 ```
 
-**bat still showing old theme:**
+**bat sigue mostrando el tema anterior:**
 
 ```bash
-# Check bat config
+# Comprobar la configuración de bat
 cat ~/.config/bat/config
 
-# Reload in current shell
-reload    # alias for: source ~/.zshrc
+# Recargar en la sesión actual
+reload    # alias de: source ~/.zshrc
 ```
 
-**Starship palette not updating:**
+**La paleta de Starship no se actualiza:**
 
 ```bash
-# Check starship config
+# Comprobar la configuración de paleta actual
 grep "^palette" ~/.config/starship.toml
 
-# Re-run the switcher
+# Volver a ejecutar el cambiador de temas
 theme-switcher catppuccin
 ```
