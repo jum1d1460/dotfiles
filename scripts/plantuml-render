@@ -17,6 +17,43 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 GRAY='\033[0;90m'
 
+select_with_arrows() {
+    local title="$1"; shift
+    local options=("$@")
+    local selected=0
+    local key=""
+
+    [[ ${#options[@]} -gt 0 ]] || return 1
+
+    while true; do
+        printf '\033[2J\033[H'
+        echo -e "${YELLOW}${title}${NC}"
+        echo ""
+        for i in "${!options[@]}"; do
+            if [[ $i -eq $selected ]]; then
+                echo -e "${GREEN}> ${options[$i]}${NC}"
+            else
+                echo "  ${options[$i]}"
+            fi
+        done
+        echo ""
+        echo -e "${GRAY}Usa las flechas ↑ ↓ y Enter para elegir.${NC}"
+
+        IFS= read -rsn1 key || return 1
+        if [[ "$key" == $'\x1b' ]]; then
+            IFS= read -rsn2 key || true
+            case "$key" in
+                "[A") selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} )) ;;
+                "[B") selected=$(( (selected + 1) % ${#options[@]} )) ;;
+            esac
+        elif [[ -z "$key" ]]; then
+            REPLY="${options[$selected]}"
+            printf '\033[2J\033[H'
+            return 0
+        fi
+    done
+}
+
 if ! command -v podman >/dev/null 2>&1; then
   echo -e "${RED}Error:${NC} 'podman' no esta instalado."
   echo "Instalalo y vuelve a ejecutar este comando."
@@ -30,7 +67,8 @@ if [ -n "$EXISTS" ]; then
     RUNNING=$(podman inspect -f '{{.State.Running}}' "$CONTAINER_NAME")
 fi
 
-echo -e "${YELLOW}=== GESTOR DE PLANTUML (PODMAN) ===${NC}"
+TITLE="=== GESTOR DE PLANTUML (PODMAN) ==="
+echo -e "${YELLOW}${TITLE}${NC}"
 
 # 2. Mostrar estado actual
 if [ -z "$EXISTS" ]; then
@@ -67,7 +105,37 @@ fi
 
 echo "4) Cancelar (Salir)"
 echo "-----------------------------------"
-read -rp "Selecciona una opcion: " OPTION
+
+if [[ "$STATUS" == "STOPPED" || "$STATUS" == "NOT_CREATED" ]]; then
+    START_LABEL="Arrancar"
+else
+    START_LABEL="Arrancar [Ya esta corriendo]"
+fi
+
+if [[ "$STATUS" == "RUNNING" ]]; then
+    STOP_LABEL="Parar"
+else
+    STOP_LABEL="Parar [No esta corriendo]"
+fi
+
+if [[ "$STATUS" != "NOT_CREATED" ]]; then
+    LOG_LABEL="Ver logs"
+else
+    LOG_LABEL="Ver logs [Contenedor no existe]"
+fi
+
+if [[ -t 0 && -t 1 ]]; then
+    select_with_arrows "$TITLE" "$START_LABEL" "$STOP_LABEL" "$LOG_LABEL" "Cancelar (Salir)"
+    case "$REPLY" in
+        "$START_LABEL") OPTION=1 ;;
+        "$STOP_LABEL") OPTION=2 ;;
+        "$LOG_LABEL") OPTION=3 ;;
+        "Cancelar (Salir)") OPTION=4 ;;
+        *) OPTION=4 ;;
+    esac
+else
+    read -rp "Selecciona una opcion: " OPTION
+fi
 
 # 4. Logica de ejecucion
 case $OPTION in

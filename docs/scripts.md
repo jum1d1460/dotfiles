@@ -60,7 +60,7 @@ theme-switcher catppuccin      # pasteles cálidos (por defecto)
 theme-switcher tokyo-night     # azules y morados oscuros
 theme-switcher dracula         # alto contraste rosa/morado
 
-# Sin argumento — muestra el uso y los temas disponibles:
+# Sin argumento — abre un menu interactivo (flechas + Enter):
 theme-switcher
 ```
 
@@ -84,6 +84,8 @@ Consulta `docs/themes.md` para más detalles sobre cómo añadir nuevos temas.
 **Alias:** `docs` (también definido en `~/.zshrc`)
 
 Abre el navegador de documentación interactivo en la terminal usando `glow`.
+
+Sin argumentos abre un menu interactivo con cursor (flechas ↑ ↓ y Enter).
 
 ```bash
 docs                     # abrir el navegador de documentación interactivo
@@ -114,6 +116,8 @@ docs troubleshooting     # abrir la guía de solución de problemas
 **Enlace simbólico en:** `~/.local/bin/plantuml-render`
 
 Levanta y gestiona un contenedor de PlantUML Server con Podman para renderizar diagramas.
+
+El script abre un menu interactivo con cursor (flechas ↑ ↓ y Enter).
 
 ```bash
 plantuml-render

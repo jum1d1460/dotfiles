@@ -162,6 +162,69 @@ alias help='tldr'
 # or override at any time: DOTFILES_DIR=/my/path docs)
 export DOTFILES_DIR="${DOTFILES_DIR:-${HOME}/.dotfiles}"
 
+# ─── Startup banner ───────────────────────────────────────────────────────────
+dotfiles_read_active_theme() {
+  local theme_name="catppuccin"
+  local theme_file="${HOME}/.config/current-theme"
+
+  if [[ -r "${theme_file}" ]]; then
+    theme_name="$(<"${theme_file}")"
+    theme_name="${theme_name//$'\n'/}"
+    theme_name="${theme_name//$'\r'/}"
+  fi
+
+  case "${theme_name}" in
+    catppuccin) echo "Catppuccin Macchiato" ;;
+    tokyo-night) echo "Tokyo Night" ;;
+    dracula) echo "Dracula (Official)" ;;
+    *) echo "${theme_name}" ;;
+  esac
+}
+
+dotfiles_random_startup_quote() {
+  local quotes_file="${DOTFILES_DIR}/zsh/.config/dotfiles/startup-quotes.txt"
+  local -a quotes=()
+
+  if [[ -r "${quotes_file}" ]]; then
+    quotes=(${(f)"$(sed '/^[[:space:]]*#/d;/^[[:space:]]*$/d' "${quotes_file}")"})
+  fi
+
+  if (( ${#quotes[@]} == 0 )); then
+    quotes=("Hoy toca compilar calma, cafe y un poco de gloria.")
+  fi
+
+  echo "${quotes[$(( (RANDOM % ${#quotes[@]}) + 1 ))]}"
+}
+
+dotfiles_print_startup_banner() {
+  local quote theme now cwd_short repo_branch
+
+  quote="$(dotfiles_random_startup_quote)"
+  theme="$(dotfiles_read_active_theme)"
+  now="$(date '+%Y-%m-%d %H:%M')"
+  cwd_short="${PWD/#${HOME}/~}"
+  repo_branch=""
+
+  if command -v git &>/dev/null; then
+    repo_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+    [[ "${repo_branch}" == "HEAD" ]] && repo_branch=""
+  fi
+
+  print -P ""
+  print -P "%B%F{magenta}${quote}%f%b"
+  print -P "%F{yellow}Tema:%f ${theme}   %F{yellow}Shell:%f zsh ${ZSH_VERSION}   %F{yellow}Hora:%f ${now}"
+  print -P "%F{yellow}Ruta:%f ${cwd_short}   %F{yellow}Host:%f ${HOST}"
+  if [[ -n "${repo_branch}" ]]; then
+    print -P "%F{yellow}Git:%f ${repo_branch}"
+  fi
+  print -P "%F{cyan}Ayuda:%f docs  |  theme-switcher  |  plantuml-render  |  up  |  reload"
+  print -P ""
+}
+
+if [[ -o interactive ]] && [[ "${TERM:-}" != "dumb" ]] && [[ "${DOTFILES_SUPPRESS_BANNER:-0}" != "1" ]] && [[ "${SHLVL:-1}" -le 2 ]]; then
+  dotfiles_print_startup_banner
+fi
+
 # ─── System info ──────────────────────────────────────────────────────────────
 # Print a short system summary on new terminals (optional)
 # command -v fastfetch &>/dev/null && fastfetch --logo-type kitty

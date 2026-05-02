@@ -38,6 +38,43 @@ print_available_docs() {
   done
 }
 
+select_with_arrows() {
+  local title="$1"; shift
+  local options=("$@")
+  local selected=0
+  local key=""
+
+  [[ ${#options[@]} -gt 0 ]] || return 1
+
+  while true; do
+    printf '\033[2J\033[H'
+    echo -e "${BOLD}${title}${RESET}"
+    echo ""
+    for i in "${!options[@]}"; do
+      if [[ $i -eq $selected ]]; then
+        echo -e "${GREEN}> ${options[$i]}${RESET}"
+      else
+        echo "  ${options[$i]}"
+      fi
+    done
+    echo ""
+    echo -e "${YELLOW}Usa las flechas ↑ ↓ y Enter para elegir.${RESET}"
+
+    IFS= read -rsn1 key || return 1
+    if [[ "$key" == $'\x1b' ]]; then
+      IFS= read -rsn2 key || true
+      case "$key" in
+        "[A") selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} )) ;;
+        "[B") selected=$(( (selected + 1) % ${#options[@]} )) ;;
+      esac
+    elif [[ -z "$key" ]]; then
+      REPLY="${options[$selected]}"
+      printf '\033[2J\033[H'
+      return 0
+    fi
+  done
+}
+
 render_doc() {
   local target="$1"
   if [[ -n "${WEZTERM_PANE:-}" ]]; then
@@ -76,20 +113,20 @@ if [[ -n "${1:-}" ]]; then
   render_doc "${TARGET}"
 else
   # Interactive browser — list all docs in the directory
-  if [[ -n "${WEZTERM_PANE:-}" ]]; then
-    if command -v fzf &>/dev/null; then
-      choice="$(select_doc_with_fzf || true)"
-      if [[ -n "${choice}" ]]; then
-        render_doc "${DOCS_DIR}/${choice}.md"
-      else
-        echo -e "${YELLOW}Notice:${RESET} Selection cancelled."
-      fi
-    else
-      echo -e "${YELLOW}Notice:${RESET} WezTerm detected. Use ${CYAN}docs <nombre>${RESET} for reliable scrolling."
-      echo ""
-      print_available_docs
+  if [[ -t 0 && -t 1 ]]; then
+    mapfile -t doc_names < <(find "${DOCS_DIR}" -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sed 's/\.md$//' | sort)
+    doc_names+=("salir")
+    select_with_arrows "Documentacion" "${doc_names[@]}"
+    choice="$REPLY"
+    if [[ "$choice" != "salir" ]]; then
+      render_doc "${DOCS_DIR}/${choice}.md"
     fi
   else
-    glow "${DOCS_DIR}"
+    if command -v fzf &>/dev/null; then
+      choice="$(select_doc_with_fzf || true)"
+      [[ -n "${choice}" ]] && render_doc "${DOCS_DIR}/${choice}.md"
+    else
+      glow "${DOCS_DIR}"
+    fi
   fi
 fi

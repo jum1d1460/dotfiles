@@ -14,6 +14,43 @@ success() { echo -e "${GREEN}[theme-switcher]${RESET} $*"; }
 warn()    { echo -e "${YELLOW}[theme-switcher]${RESET} $*"; }
 error()   { echo -e "${RED}[theme-switcher]${RESET} $*" >&2; exit 1; }
 
+select_with_arrows() {
+  local title="$1"; shift
+  local options=("$@")
+  local selected=0
+  local key=""
+
+  [[ ${#options[@]} -gt 0 ]] || return 1
+
+  while true; do
+    printf '\033[2J\033[H'
+    echo -e "${BOLD}${title}${RESET}"
+    echo ""
+    for i in "${!options[@]}"; do
+      if [[ $i -eq $selected ]]; then
+        echo -e "${GREEN}> ${options[$i]}${RESET}"
+      else
+        echo "  ${options[$i]}"
+      fi
+    done
+    echo ""
+    echo -e "${YELLOW}Usa las flechas ↑ ↓ y Enter para elegir.${RESET}"
+
+    IFS= read -rsn1 key || return 1
+    if [[ "$key" == $'\x1b' ]]; then
+      IFS= read -rsn2 key || true
+      case "$key" in
+        "[A") selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} )) ;;
+        "[B") selected=$(( (selected + 1) % ${#options[@]} )) ;;
+      esac
+    elif [[ -z "$key" ]]; then
+      REPLY="${options[$selected]}"
+      printf '\033[2J\033[H'
+      return 0
+    fi
+  done
+}
+
 # ─── Theme definitions ────────────────────────────────────────────────────────
 declare -A WEZTERM_THEMES=(
   ["catppuccin"]="Catppuccin Macchiato"
@@ -44,13 +81,15 @@ declare -A GNOME_WALLPAPERS=(
 # ─── Validate argument ────────────────────────────────────────────────────────
 THEME="${1:-}"
 if [[ -z "${THEME}" ]]; then
-  echo -e "${BOLD}Usage:${RESET} theme-switcher <catppuccin|tokyo-night|dracula>"
-  echo ""
-  echo "Available themes:"
-  for t in "${!WEZTERM_THEMES[@]}"; do
-    echo "  • ${t}"
-  done
-  exit 1
+  if [[ -t 0 && -t 1 ]]; then
+    select_with_arrows "Selecciona un tema" \
+      "catppuccin" "tokyo-night" "dracula" "cancelar"
+    THEME="$REPLY"
+    [[ "$THEME" == "cancelar" ]] && exit 0
+  else
+    echo -e "${BOLD}Usage:${RESET} theme-switcher <catppuccin|tokyo-night|dracula>"
+    exit 1
+  fi
 fi
 
 [[ -v WEZTERM_THEMES["${THEME}"] ]] || \

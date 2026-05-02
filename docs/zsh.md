@@ -161,6 +161,43 @@ Ambos plugins se clonan en `~/.zsh/plugins/` durante la instalación.
 
 ---
 
+## Mensaje de Arranque
+
+Cada terminal nueva muestra un banner breve al iniciar la shell interactiva con:
+
+- Una frase aleatoria
+- El tema activo
+- La versión de Zsh
+- La hora
+- La ruta actual
+- El host
+- La rama Git actual, si estás dentro de un repositorio
+- Un recordatorio de comandos útiles como `docs`, `theme-switcher`, `plantuml-render`, `up` y `reload`
+
+### Dónde cambiar las frases
+
+Edita este archivo en el repositorio:
+
+```bash
+vim ~/.dotfiles/zsh/.config/dotfiles/startup-quotes.txt
+```
+
+Pon una frase por línea.
+
+### Desactivar el banner temporalmente
+
+```bash
+DOTFILES_SUPPRESS_BANNER=1 zsh
+```
+
+O recarga la shell actual sin mostrarlo:
+
+```bash
+DOTFILES_SUPPRESS_BANNER=1 reload
+```
+
+---
+
 ## Modificar la Configuración
 
 ```bash
