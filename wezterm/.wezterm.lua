@@ -35,15 +35,19 @@ config.font = wezterm.font_with_fallback({
   { family = "JetBrainsMono Nerd Font", harfbuzz_features = { "calt=1", "liga=1", "clig=1" } },
   "Noto Color Emoji",
 })
-config.font_size = 13.0
-config.line_height = 1.2
+
+-- Start zsh login shell so aliases and prompts are always loaded
+config.default_prog = { "env", "zsh", "-l" }
+
+config.font_size = 11
+config.line_height = 1.0
 config.cell_width = 1.0
 
 -- Colour scheme
 config.color_scheme = active_color_scheme
 
--- Window decorations — purista (no titlebar, no borders)
-config.window_decorations = "NONE"
+-- Show native titlebar controls and resize borders
+config.window_decorations = "TITLE|RESIZE"
 config.window_padding = { left = 12, right = 12, top = 10, bottom = 10 }
 
 -- Transparency & blur
@@ -76,7 +80,7 @@ config.visual_bell = {
 -- Performance
 config.animation_fps = 60
 config.max_fps = 120
-config.front_end = "WebGpu"
+config.front_end = "OpenGL"
 
 -- ─── Key bindings ─────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
@@ -111,16 +115,6 @@ config.keys = {
   { key = "=", mods = "CTRL",   action = act.IncreaseFontSize },
   { key = "-", mods = "CTRL",   action = act.DecreaseFontSize },
   { key = "0", mods = "CTRL",   action = act.ResetFontSize },
-}
-
--- ─── Mouse bindings ───────────────────────────────────────────────────────────
-config.mouse_bindings = {
-  -- Right-click paste
-  {
-    event = { Down = { streak = 1, button = "Right" } },
-    mods = "NONE",
-    action = act.PasteFrom("Clipboard"),
-  },
 }
 
 return config

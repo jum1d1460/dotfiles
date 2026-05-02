@@ -161,10 +161,6 @@ alias help='tldr'
 # Location of the dotfiles repo (default: ~/.dotfiles — adjust if cloned elsewhere,
 # or override at any time: DOTFILES_DIR=/my/path docs)
 export DOTFILES_DIR="${DOTFILES_DIR:-${HOME}/.dotfiles}"
-# 'docs' opens the interactive documentation browser (powered by glow)
-# Usage: docs           → interactive browser
-#        docs <name>    → open specific doc (e.g. docs tools, docs wezterm)
-alias docs='glow "${DOTFILES_DIR}/docs/"'
 
 # ─── System info ──────────────────────────────────────────────────────────────
 # Print a short system summary on new terminals (optional)
