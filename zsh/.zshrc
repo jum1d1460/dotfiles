@@ -157,67 +157,78 @@ export BAT_THEME="${BAT_THEME:-Catppuccin Macchiato}"
 # ─── tldr ─────────────────────────────────────────────────────────────────────
 alias help='tldr'
 
-# ─── Dotfiles documentation ───────────────────────────────────────────────────
-# Location of the dotfiles repo (default: ~/.dotfiles — adjust if cloned elsewhere,
-# or override at any time: DOTFILES_DIR=/my/path docs)
-export DOTFILES_DIR="${DOTFILES_DIR:-${HOME}/.dotfiles}"
+# ─── Dotfiles directory ───────────────────────────────────────────────────────
+# Detect from the real path of this file (works whether cloned at ~/.dotfiles
+# or any other location, since ~/.zshrc is a Stow symlink).
+if [[ -z "${DOTFILES_DIR:-}" ]]; then
+  _zshrc_real="$(realpath "${HOME}/.zshrc" 2>/dev/null || true)"
+  if [[ -n "${_zshrc_real}" ]]; then
+    export DOTFILES_DIR="$(dirname "$(dirname "${_zshrc_real}")")"
+  else
+    export DOTFILES_DIR="${HOME}/.dotfiles"
+  fi
+  unset _zshrc_real
+fi
 
 # ─── Startup banner ───────────────────────────────────────────────────────────
 dotfiles_read_active_theme() {
   local theme_name="catppuccin"
   local theme_file="${HOME}/.config/current-theme"
-
   if [[ -r "${theme_file}" ]]; then
     theme_name="$(<"${theme_file}")"
     theme_name="${theme_name//$'\n'/}"
     theme_name="${theme_name//$'\r'/}"
   fi
-
   case "${theme_name}" in
-    catppuccin) echo "Catppuccin Macchiato" ;;
+    catppuccin)  echo "Catppuccin Macchiato" ;;
     tokyo-night) echo "Tokyo Night" ;;
-    dracula) echo "Dracula (Official)" ;;
-    *) echo "${theme_name}" ;;
+    dracula)     echo "Dracula (Official)" ;;
+    *)           echo "${theme_name}" ;;
   esac
 }
 
 dotfiles_random_startup_quote() {
   local quotes_file="${DOTFILES_DIR}/zsh/.config/dotfiles/startup-quotes.txt"
   local -a quotes=()
-
   if [[ -r "${quotes_file}" ]]; then
     quotes=(${(f)"$(sed '/^[[:space:]]*#/d;/^[[:space:]]*$/d' "${quotes_file}")"})
   fi
-
   if (( ${#quotes[@]} == 0 )); then
-    quotes=("Hoy toca compilar calma, cafe y un poco de gloria.")
+    quotes=('"El sistema funciona… hasta que alguien lo entiende." — Neo')
   fi
-
   echo "${quotes[$(( (RANDOM % ${#quotes[@]}) + 1 ))]}"
 }
 
 dotfiles_print_startup_banner() {
   local quote theme now cwd_short repo_branch
+  local cols=$(( ${COLUMNS:-80} < 88 ? ${COLUMNS:-80} : 88 ))
+  local ruler="${(r:${cols}::─:)}"
+  local ruler_thin="${(r:${cols}:: :)}"
 
   quote="$(dotfiles_random_startup_quote)"
   theme="$(dotfiles_read_active_theme)"
   now="$(date '+%Y-%m-%d %H:%M')"
   cwd_short="${PWD/#${HOME}/~}"
   repo_branch=""
-
   if command -v git &>/dev/null; then
     repo_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
     [[ "${repo_branch}" == "HEAD" ]] && repo_branch=""
   fi
 
   print -P ""
-  print -P "%B%F{magenta}${quote}%f%b"
-  print -P "%F{yellow}Tema:%f ${theme}   %F{yellow}Shell:%f zsh ${ZSH_VERSION}   %F{yellow}Hora:%f ${now}"
-  print -P "%F{yellow}Ruta:%f ${cwd_short}   %F{yellow}Host:%f ${HOST}"
-  if [[ -n "${repo_branch}" ]]; then
-    print -P "%F{yellow}Git:%f ${repo_branch}"
-  fi
-  print -P "%F{cyan}Ayuda:%f docs  |  theme-switcher  |  plantuml-render  |  up  |  reload"
+  print -P "%F{magenta}╭${ruler}╮%f"
+  print -P "%F{magenta}│%f                                                                              %F{magenta}│%f"
+  print -P "%F{magenta}│%f  %B%F{white}${quote}%f%b"
+  print -P "%F{magenta}│%f                                                                              %F{magenta}│%f"
+  print -P "%F{magenta}╰${ruler}╯%f"
+  print -P ""
+  print -P "  %F{yellow}◆ Tema%f   ${theme}"
+  print -P "  %F{yellow}◆ Shell%f  zsh ${ZSH_VERSION}   %F{yellow}Hora%f  ${now}   %F{yellow}Host%f  ${HOST}"
+  print -P "  %F{yellow}◆ Ruta%f   ${cwd_short}${repo_branch:+   }%F{yellow}${repo_branch:+Git  }%f${repo_branch}"
+  print -P ""
+  print -P "  %F{cyan}${ruler}%f"
+  print -P "  %F{cyan}⌨  docs  ·  theme-switcher  ·  plantuml-render  ·  up  ·  reload%f"
+  print -P "  %F{cyan}${ruler}%f"
   print -P ""
 }
 
