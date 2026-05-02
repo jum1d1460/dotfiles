@@ -39,8 +39,10 @@ config.font = wezterm.font_with_fallback({
 -- Start zsh login shell so aliases and prompts are always loaded
 config.default_prog = { "env", "zsh", "-l" }
 
-config.font_size = 11
+config.font_size = 10
 config.line_height = 1.0
+config.initial_cols = 220
+config.initial_rows = 50
 config.cell_width = 1.0
 
 -- Colour scheme
