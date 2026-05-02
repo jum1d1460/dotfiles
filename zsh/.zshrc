@@ -201,9 +201,10 @@ dotfiles_random_startup_quote() {
 
 dotfiles_print_startup_banner() {
   local quote theme now cwd_short repo_branch
-  local cols=$(( ${COLUMNS:-80} < 88 ? ${COLUMNS:-80} : 88 ))
-  local ruler="${(r:${cols}::─:)}"
-  local ruler_thin="${(r:${cols}:: :)}"
+  # cols = ancho total de la caja (╭...╮); inner = espacio entre │ y │
+  local cols=$(( ${COLUMNS:-80} < 100 ? ${COLUMNS:-80} - 2 : 98 ))
+  local inner=$(( cols - 2 ))   # chars entre │ y │: │ + inner + │ = cols
+  local lpad=2                  # espacios a la izquierda de la frase
 
   quote="$(dotfiles_random_startup_quote)"
   theme="$(dotfiles_read_active_theme)"
@@ -215,20 +216,30 @@ dotfiles_print_startup_banner() {
     [[ "${repo_branch}" == "HEAD" ]] && repo_branch=""
   fi
 
+  # Truncar frase si no cabe en la caja
+  local max_q=$(( inner - lpad - 1 ))
+  (( ${#quote} > max_q )) && quote="${quote[1,$(( max_q - 1 ))]}…"
+
+  local rpad=$(( inner - lpad - ${#quote} ))
+  local top_rule="${(r:${inner}::─:)}"
+  local empty="${(r:${inner}:: :)}"
+  local help_line="⌨  docs  ·  theme-switcher  ·  plantuml-render  ·  up  ·  reload"
+  local help_rpad=$(( inner - lpad - ${#help_line} ))
+
   print -P ""
-  print -P "%F{magenta}╭${ruler}╮%f"
-  print -P "%F{magenta}│%f                                                                              %F{magenta}│%f"
-  print -P "%F{magenta}│%f  %B%F{white}${quote}%f%b"
-  print -P "%F{magenta}│%f                                                                              %F{magenta}│%f"
-  print -P "%F{magenta}╰${ruler}╯%f"
+  print -P "%F{magenta}╭${top_rule}╮%f"
+  print -P "%F{magenta}│${empty}│%f"
+  print -P "%F{magenta}│%f${(r:${lpad}:: :)}%B%F{white}${quote}%f%b${(r:${rpad}:: :)}%F{magenta}│%f"
+  print -P "%F{magenta}│${empty}│%f"
+  print -P "%F{magenta}╰${top_rule}╯%f"
   print -P ""
   print -P "  %F{yellow}◆ Tema%f   ${theme}"
   print -P "  %F{yellow}◆ Shell%f  zsh ${ZSH_VERSION}   %F{yellow}Hora%f  ${now}   %F{yellow}Host%f  ${HOST}"
   print -P "  %F{yellow}◆ Ruta%f   ${cwd_short}${repo_branch:+   }%F{yellow}${repo_branch:+Git  }%f${repo_branch}"
   print -P ""
-  print -P "  %F{cyan}${ruler}%f"
-  print -P "  %F{cyan}⌨  docs  ·  theme-switcher  ·  plantuml-render  ·  up  ·  reload%f"
-  print -P "  %F{cyan}${ruler}%f"
+  print -P "%F{cyan}╭${top_rule}╮%f"
+  print -P "%F{cyan}│%f${(r:${lpad}:: :)}%F{cyan}${help_line}%f${(r:${help_rpad}:: :)}%F{cyan}│%f"
+  print -P "%F{cyan}╰${top_rule}╯%f"
   print -P ""
 }
 
