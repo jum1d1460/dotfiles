@@ -10,4 +10,4 @@
 --map-syntax "Makefile:Makefile"
 --map-syntax "*.toml:TOML"
 --italic-text=always
---theme="Catppuccin Macchiato"
+--theme="TwoDark"
