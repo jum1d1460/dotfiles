@@ -108,6 +108,53 @@ docs troubleshooting     # abrir la guía de solución de problemas
 
 ---
 
+## `plantuml-render` — Gestor del Render de PlantUML
+
+**Ubicación:** `~/.dotfiles/scripts/plantuml-render`  
+**Enlace simbólico en:** `~/.local/bin/plantuml-render`
+
+Levanta y gestiona un contenedor de PlantUML Server con Podman para renderizar diagramas.
+
+```bash
+plantuml-render
+```
+
+### Qué hace
+
+| Opción | Acción |
+|--------|--------|
+| `1) Arrancar` | Crea el contenedor si no existe o lo arranca si está detenido |
+| `2) Parar` | Detiene el contenedor si está en ejecución |
+| `3) Ver logs` | Sigue los logs del contenedor en tiempo real |
+| `4) Cancelar` | Sale del menú |
+
+### Configuración por defecto
+
+| Variable | Valor |
+|----------|-------|
+| Puerto host | `8085` |
+| Puerto contenedor | `8080` |
+| Nombre del contenedor | `plantuml-render` |
+| Imagen | `plantuml/plantuml-server:jetty` |
+
+### URL de uso
+
+Cuando el servicio está activo, puedes usar:
+
+```text
+http://localhost:8085
+```
+
+Para obtener un diagrama desde texto codificado en URL, el endpoint típico es:
+
+```text
+http://localhost:8085/svg/<encoded-diagram>
+```
+
+> Requisito: `podman` debe estar instalado y disponible en el PATH.
+
+---
+
 ## Añadir un Nuevo Script
 
 1. Crea tu script en `~/.dotfiles/scripts/mi-script`

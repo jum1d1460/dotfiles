@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# =============================================================================
+# plantuml-render — Gestor de servidor PlantUML con Podman
+# Uso: plantuml-render
+# =============================================================================
+set -euo pipefail
+
+# Configuracion
+PORT=8085
+CONTAINER_NAME="plantuml-render"
+IMAGE="plantuml/plantuml-server:jetty"
+
+# Colores para la interfaz
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+GRAY='\033[0;90m'
+
+if ! command -v podman >/dev/null 2>&1; then
+  echo -e "${RED}Error:${NC} 'podman' no esta instalado."
+  echo "Instalalo y vuelve a ejecutar este comando."
+  exit 1
+fi
+
+# 1. Comprobar estado real
+EXISTS=$(podman ps -aq -f name=^/${CONTAINER_NAME}$)
+RUNNING="false"
+if [ -n "$EXISTS" ]; then
+    RUNNING=$(podman inspect -f '{{.State.Running}}' "$CONTAINER_NAME")
+fi
+
+echo -e "${YELLOW}=== GESTOR DE PLANTUML (PODMAN) ===${NC}"
+
+# 2. Mostrar estado actual
+if [ -z "$EXISTS" ]; then
+    echo -e "Estado: ${RED}NO CREADO${NC}"
+    STATUS="NOT_CREATED"
+elif [ "$RUNNING" == "true" ]; then
+    echo -e "Estado: ${GREEN}EN EJECUCION${NC} (Puerto $PORT)"
+    STATUS="RUNNING"
+else
+    echo -e "Estado: ${RED}DETENIDO${NC}"
+    STATUS="STOPPED"
+fi
+
+echo "-----------------------------------"
+
+# 3. Mostrar menu con opciones dinamicas
+if [[ "$STATUS" == "STOPPED" || "$STATUS" == "NOT_CREATED" ]]; then
+    echo -e "1) Arrancar"
+else
+    echo -e "${GRAY}1) Arrancar [Ya esta corriendo]${NC}"
+fi
+
+if [[ "$STATUS" == "RUNNING" ]]; then
+    echo -e "2) Parar"
+else
+    echo -e "${GRAY}2) Parar [No esta corriendo]${NC}"
+fi
+
+if [[ "$STATUS" != "NOT_CREATED" ]]; then
+    echo -e "3) Ver logs"
+else
+    echo -e "${GRAY}3) Ver logs [Contenedor no existe]${NC}"
+fi
+
+echo "4) Cancelar (Salir)"
+echo "-----------------------------------"
+read -rp "Selecciona una opcion: " OPTION
+
+# 4. Logica de ejecucion
+case $OPTION in
+    1)
+        if [[ "$STATUS" == "NOT_CREATED" ]]; then
+            podman run -d --name "$CONTAINER_NAME" -p "$PORT:8080" --restart always "$IMAGE"
+        elif [[ "$STATUS" == "STOPPED" ]]; then
+            podman start "$CONTAINER_NAME"
+        else
+            echo -e "${YELLOW}Aviso: El servidor ya esta activo.${NC}"
+        fi
+        ;;
+    2)
+        if [[ "$STATUS" == "RUNNING" ]]; then
+            podman stop "$CONTAINER_NAME"
+        else
+            echo -e "${YELLOW}Aviso: No hay nada que parar.${NC}"
+        fi
+        ;;
+    3)
+        if [[ "$STATUS" != "NOT_CREATED" ]]; then
+            podman logs -f "$CONTAINER_NAME"
+        else
+            echo -e "${YELLOW}Error: Primero debes crear el contenedor.${NC}"
+        fi
+        ;;
+    4)
+        echo "Saliendo..."
+        exit 0
+        ;;
+    *)
+        echo "Opcion no valida."
+        ;;
+esac

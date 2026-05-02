@@ -14,7 +14,7 @@ Navega con las flechas ↑ ↓, pulsa **Enter** para abrir una guía y **Esc** p
 | `wezterm.md` | Emulador de terminal WezTerm — configuración y atajos de teclado |
 | `zsh.md` | Shell Zsh — configuración, alias, plugins y atajos de teclado |
 | `themes.md` | Sistema de temas — cómo cambiar y crear temas |
-| `scripts.md` | Scripts: `up` (actualizador), `theme-switcher`, `docs` |
+| `scripts.md` | Scripts: `up` (actualizador), `theme-switcher`, `docs`, `plantuml-render` |
 | `stow.md` | GNU Stow — cómo se despliegan los dotfiles como enlaces simbólicos |
 | `troubleshooting.md` | Problemas habituales y sus soluciones |
 
@@ -26,6 +26,7 @@ Navega con las flechas ↑ ↓, pulsa **Enter** para abrir una guía y **Esc** p
 docs                        # abrir este navegador de documentación
 docs tools                  # abrir una guía específica directamente
 theme-switcher catppuccin   # cambiar al tema Catppuccin
+plantuml-render             # arrancar/parar logs del servidor PlantUML (Podman)
 up                          # actualización completa del sistema (apt + Flatpak + Nix)
 lg                          # abrir lazygit (cliente Git en TUI)
 tldr <comando>              # ejemplos prácticos de cualquier comando

@@ -78,7 +78,7 @@ docs tools              # CLI tools reference
 docs wezterm            # WezTerm key bindings and configuration
 docs zsh                # Zsh aliases, shortcuts, and settings
 docs themes             # Theme system — switching and creating themes
-docs scripts            # Scripts: up, theme-switcher, docs
+docs scripts            # Scripts: up, theme-switcher, docs, plantuml-render
 docs stow               # GNU Stow cheatsheet
 docs troubleshooting    # Common issues and fixes
 ```
@@ -138,7 +138,8 @@ dotfiles/
 │
 └── scripts/                    # Linked to ~/.local/bin/ by installer
     ├── theme-switcher          # Theme switching script
-    └── docs                    # Documentation browser (launches glow)
+    ├── docs                    # Documentation browser (launches glow)
+    └── plantuml-render         # PlantUML server manager with Podman
 ```
 
 > **How Stow works:** Running `stow <package>` from `~/.dotfiles` creates
